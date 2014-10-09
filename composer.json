@@ -1,0 +1,12 @@
+{
+    "name": "komex/remote-control",
+    "description": "Mocking any objects and classes",
+    "minimum-stability": "stable",
+    "license": "CC-BY-SA-3.0",
+    "authors": [
+        {
+            "name": "Andrey Kolchenko",
+            "email": "andrey@kolchenko.me"
+        }
+    ]
+}
