@@ -7,6 +7,8 @@
 
 namespace Influence\Transformer\Mode;
 
+use Influence\Transformer\Transformer;
+
 /**
  * Class FileMode
  *
@@ -25,10 +27,10 @@ class FileMode extends AbstractMode
     {
         switch ($code) {
             case T_CLASS:
-                $this->transformer->setMode(new ClassMode());
+                $this->transformer->setMode(Transformer::MODE_CLASS)->reset();
                 break;
             case T_TRAIT:
-                $this->transformer->setMode(new AsIsMode());
+                $this->transformer->setMode(Transformer::MODE_AS_IS)->reset();
                 break;
         }
         return $value;

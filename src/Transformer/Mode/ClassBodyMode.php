@@ -7,6 +7,8 @@
 
 namespace Influence\Transformer\Mode;
 
+use Influence\Transformer\Transformer;
+
 /**
  * Class ClassBodyMode
  *
@@ -36,14 +38,22 @@ class ClassBodyMode extends AbstractMode
                 $this->static = false;
                 break;
             case T_FUNCTION:
-                $this->transformer->setMode(new MethodMode($this->static));
+                $this->transformer->setMode(Transformer::MODE_METHOD)->reset($this->static);
                 break;
             case null:
                 if ($value === '}') {
-                    $this->transformer->setMode(new FileMode());
+                    $this->transformer->setMode(Transformer::MODE_FILE)->reset();
                 }
                 break;
         }
         return $value;
+    }
+
+    /**
+     * @param null $defaultValue
+     */
+    public function reset($defaultValue = null)
+    {
+        $this->static = false;
     }
 }

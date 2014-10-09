@@ -7,6 +7,8 @@
 
 namespace Influence\Transformer\Mode;
 
+use Influence\Transformer\Transformer;
+
 /**
  * Class ClassMode
  *
@@ -24,7 +26,7 @@ class ClassMode extends AbstractMode
     public function transform($code, $value)
     {
         if ($value === '{') {
-            $this->transformer->setMode(new ClassBodyMode());
+            $this->transformer->setMode(Transformer::MODE_CLASS_BODY)->reset();
         }
 
         return $value;

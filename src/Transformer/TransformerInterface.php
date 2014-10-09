@@ -22,4 +22,11 @@ interface TransformerInterface
      * @return string
      */
     public function transform($code, $value);
+
+    /**
+     * @param mixed $defaultValue
+     *
+     * @return void
+     */
+    public function reset($defaultValue = null);
 }

@@ -30,4 +30,14 @@ abstract class AbstractMode implements TransformerInterface
     {
         $this->transformer = $transformer;
     }
+
+    /**
+     * @param mixed $defaultValue
+     *
+     * @return void
+     */
+    public function reset($defaultValue = null)
+    {
+
+    }
 }

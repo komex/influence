@@ -7,6 +7,8 @@
 
 namespace Influence\Transformer\Mode;
 
+use Influence\Transformer\Transformer;
+
 /**
  * Class MethodMode
  *
@@ -25,14 +27,6 @@ class MethodMode extends AbstractMode
     private $level = 0;
 
     /**
-     * @param bool $static
-     */
-    public function __construct($static)
-    {
-        $this->static = $static;
-    }
-
-    /**
      * @param int|null $code
      * @param string $value
      *
@@ -48,10 +42,19 @@ class MethodMode extends AbstractMode
         } elseif ($value === '}') {
             $this->level--;
             if ($this->level === 0) {
-                $this->transformer->setMode(new ClassBodyMode());
+                $this->transformer->setMode(Transformer::MODE_CLASS_BODY)->reset();
             }
         }
 
         return $value;
+    }
+
+    /**
+     * @param bool $defaultValue
+     */
+    public function reset($defaultValue = null)
+    {
+        $this->static = !!$defaultValue;
+        $this->level = 0;
     }
 }
