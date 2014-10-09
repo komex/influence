@@ -7,6 +7,8 @@
 
 namespace Influence;
 
+use Influence\Transformer\Transformer;
+
 /**
  * Class Filter
  *
@@ -43,7 +45,18 @@ class Filter extends \php_user_filter
      */
     private function transform($content)
     {
+        $transformer = new Transformer();
         $tokens = token_get_all($content);
+        $content = '';
+        foreach ($tokens as $token) {
+            if (is_array($token)) {
+                list($code, $value) = $token;
+            } else {
+                $code = null;
+                $value = $token;
+            }
+            $content .= $transformer->transform($code, $value);
+        }
 
         return $content;
     }
