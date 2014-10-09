@@ -1,5 +1,5 @@
 {
-    "name": "komex/remote-control",
+    "name": "komex/influence",
     "description": "Mocking any objects and classes",
     "minimum-stability": "stable",
     "license": "CC-BY-SA-3.0",
@@ -8,5 +8,16 @@
             "name": "Andrey Kolchenko",
             "email": "andrey@kolchenko.me"
         }
-    ]
+    ],
+    "require": {
+        "php": ">=5.4",
+        "ext-SPL": "*",
+        "ext-tokenizer": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Influence\\": "src/",
+            "Test\\Influence\\": "tests/"
+        }
+    }
 }
