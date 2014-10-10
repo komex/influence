@@ -85,13 +85,14 @@ class MethodMode extends AbstractMode
     {
         $target = $isStatic ? 'get_called_class()' : '$this';
         $scope = $isStatic ? 'null' : '$this';
+        $manifest = uniqid('$manifest_');
 
         $code = <<<EOL
 if (\\Influence\\RemoteControl::isUnderControl($target)) {
-    \$manifest = \\Influence\\RemoteControl::control($target);
-    \$manifest->registerCall(__FUNCTION__, func_get_args());
-    if (\$manifest->intercept(__FUNCTION__)) {
-        return \$manifest->call(__FUNCTION__, func_get_args(), $scope);
+    ${manifest} = \\Influence\\RemoteControl::control($target);
+    ${manifest}->registerCall(__FUNCTION__, func_get_args());
+    if (${manifest}->intercept(__FUNCTION__)) {
+        return ${manifest}->call(__FUNCTION__, func_get_args(), $scope);
     }
 }
 EOL;
