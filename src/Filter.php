@@ -7,6 +7,8 @@
 
 namespace Influence;
 
+use Influence\Transformer\Transformer;
+
 /**
  * Class Filter
  *
@@ -15,6 +17,11 @@ namespace Influence;
  */
 class Filter extends \php_user_filter
 {
+    /**
+     * @var Transformer
+     */
+    private static $transformer;
+
     /**
      * @param resource $in
      * @param resource $out
@@ -43,7 +50,22 @@ class Filter extends \php_user_filter
      */
     private function transform($content)
     {
+        if (self::$transformer === null) {
+            self::$transformer = new Transformer();
+        } else {
+            self::$transformer->reset();
+        }
         $tokens = token_get_all($content);
+        $content = '';
+        foreach ($tokens as $token) {
+            if (is_array($token)) {
+                list($code, $value) = $token;
+            } else {
+                $code = null;
+                $value = $token;
+            }
+            $content .= self::$transformer->transform($code, $value);
+        }
 
         return $content;
     }
