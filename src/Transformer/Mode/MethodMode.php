@@ -25,6 +25,14 @@ class MethodMode extends AbstractMode
      * @var int
      */
     private $level = 0;
+    /**
+     * @var bool
+     */
+    private $expectMethodName = true;
+    /**
+     * @var string
+     */
+    private $methodName;
 
     /**
      * @param int|null $code
@@ -34,15 +42,23 @@ class MethodMode extends AbstractMode
      */
     public function transform($code, $value)
     {
-        if ($value === '{') {
-            if ($this->level === 0) {
-                $value .= '$a = ' . ($this->static ? 1 : 2) . ';';
+        if ($this->expectMethodName) {
+            if ($code === T_STRING) {
+                $this->methodName = $value;
+                $this->expectMethodName = false;
             }
-            $this->level++;
-        } elseif ($value === '}') {
-            $this->level--;
-            if ($this->level === 0) {
-                $this->transformer->setMode(Transformer::MODE_CLASS_BODY)->reset();
+        } else {
+            if ($value === '{') {
+                if ($this->level === 0) {
+                    $static = ($this->static or $this->methodName === '__construct');
+                    $value .= $this->getCode($static);
+                }
+                $this->level++;
+            } elseif ($value === '}') {
+                $this->level--;
+                if ($this->level === 0) {
+                    $this->transformer->setMode(Transformer::MODE_CLASS_BODY)->reset();
+                }
             }
         }
 
@@ -56,5 +72,30 @@ class MethodMode extends AbstractMode
     {
         $this->static = !!$defaultValue;
         $this->level = 0;
+        $this->expectMethodName = true;
+        $this->methodName = null;
+    }
+
+    /**
+     * @param bool $isStatic
+     *
+     * @return string
+     */
+    private function getCode($isStatic)
+    {
+        $target = $isStatic ? 'get_called_class()' : '$this';
+        $scope = $isStatic ? 'null' : '$this';
+
+        $code = <<<EOL
+if (\\Influence\\RemoteControl::isUnderControl($target)) {
+    \$manifest = \\Influence\\RemoteControl::control($target);
+    \$manifest->registerCall(__FUNCTION__, func_get_args());
+    if (\$manifest->intercept(__FUNCTION__)) {
+        return \$manifest->call(__FUNCTION__, func_get_args(), $scope);
+    }
+}
+EOL;
+
+        return preg_replace('/\s+/', '', $code);
     }
 }
