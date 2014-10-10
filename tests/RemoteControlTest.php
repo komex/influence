@@ -2,7 +2,7 @@
 /**
  * This file is a part of influence project.
  *
- * (c) Andrey Kolchenko <a.j.kolchenko@baltsoftservice.ru>
+ * (c) Andrey Kolchenko <andrey@kolchenko.me>
  */
 
 namespace Test\Influence;
@@ -13,7 +13,7 @@ use Influence\RemoteControl as RC;
  * Class RemoteControlTest
  *
  * @package Test\Influence
- * @author Andrey Kolchenko <a.j.kolchenko@baltsoftservice.ru>
+ * @author Andrey Kolchenko <andrey@kolchenko.me>
  */
 class RemoteControlTest extends \PHPUnit_Framework_TestCase
 {
