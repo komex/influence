@@ -1,6 +1,7 @@
 {
     "name": "komex/influence",
     "description": "Mocking any objects and classes",
+    "keywords": ["php", "testing", "test", "mock", "stub", "unit", "UnitTest"],
     "minimum-stability": "stable",
     "license": "CC-BY-SA-3.0",
     "authors": [
@@ -9,15 +10,26 @@
             "email": "andrey@kolchenko.me"
         }
     ],
+    "support": {
+        "email": "andrey@kolchenko.me",
+        "issues": "https://github.com/komex/influence/issues",
+        "source": "https://github.com/komex/influence.git"
+    },
     "require": {
         "php": ">=5.4",
         "ext-SPL": "*",
         "ext-tokenizer": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.3.1"
     },
     "autoload": {
         "psr-4": {
             "Influence\\": "src/",
             "Test\\Influence\\": "tests/"
         }
+    },
+    "suggest": {
+        "komex/unteist": "Unit test framework for PHP projects."
     }
 }
