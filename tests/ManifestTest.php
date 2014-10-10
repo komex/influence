@@ -30,6 +30,9 @@ class ManifestTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($manifest->intercept('method1'));
         $this->assertFalse($manifest->intercept('method2'));
+
+        $manifest->setReturn('method2', false);
+        $this->assertTrue($manifest->intercept('method2'));
     }
 
     /**
@@ -65,6 +68,43 @@ class ManifestTest extends \PHPUnit_Framework_TestCase
         $this->assertNotEmpty($manifest->getCalls());
         $manifest->clearCalls();
         $this->assertEmpty($manifest->getCalls());
+    }
+
+    /**
+     * Test working with unexpected method call.
+     */
+    public function testCallUnexpectedMethod()
+    {
+        $manifest = new Manifest();
+        $this->assertNull($manifest->call('method', ['arg' => true]));
+    }
+
+    /**
+     * @return array
+     */
+    public function dpCallAndReturnScalarResult()
+    {
+        return [
+            [9],
+            [null],
+            [true],
+            [false],
+            ['string'],
+            [['a', 'r', 'r', 'a', 'y']],
+            [new \stdClass()],
+        ];
+    }
+
+    /**
+     * @param mixed $value
+     *
+     * @dataProvider dpCallAndReturnScalarResult
+     */
+    public function testCallAndReturnScalarResult($value)
+    {
+        $manifest = new Manifest();
+        $manifest->setReturn('method', $value);
+        $this->assertSame($value, $manifest->call('method', ['some' => 'arguments']));
     }
 }
  

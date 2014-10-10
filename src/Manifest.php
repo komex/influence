@@ -78,7 +78,7 @@ class Manifest
      */
     public function intercept($method)
     {
-        return !empty($this->return[$method]);
+        return array_key_exists($method, $this->return);
     }
 
     /**
