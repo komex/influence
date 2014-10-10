@@ -62,4 +62,25 @@ class RemoteControlTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse(RC::isUnderControl($object1));
         $this->assertTrue(RC::isUnderControl($object2));
     }
+
+    /**
+     * Test getting right Manifest object.
+     */
+    public function testControl()
+    {
+        $className = 'SomeClassName';
+        $object1 = new \stdClass();
+        $object2 = new \stdClass();
+
+        $this->assertFalse(RC::control($className)->intercept('method'));
+        $this->assertFalse(RC::control($object1)->intercept('method'));
+        $this->assertFalse(RC::control($object2)->intercept('method'));
+
+        RC::control($className)->setReturn('method', 5);
+        RC::control($object2)->setReturn('method', 5);
+
+        $this->assertTrue(RC::control($className)->intercept('method'));
+        $this->assertFalse(RC::control($object1)->intercept('method'));
+        $this->assertTrue(RC::control($object2)->intercept('method'));
+    }
 }
