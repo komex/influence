@@ -106,5 +106,42 @@ class ManifestTest extends \PHPUnit_Framework_TestCase
         $manifest->setReturn('method', $value);
         $this->assertSame($value, $manifest->call('method', ['some' => 'arguments']));
     }
+
+    /**
+     * Test call with simple Closure.
+     */
+    public function testCallWithClosure()
+    {
+        $manifest = new Manifest();
+        $manifest->setReturn(
+            'method',
+            function ($a, $b) {
+                return $a + $b;
+            }
+        );
+        $this->assertSame(7, $manifest->call('method', [3, 4]));
+    }
+
+    /**
+     * Test call with closure with scope.
+     */
+    public function testCallWithScopeClosure()
+    {
+        $manifest = new Manifest();
+        $object = new \stdClass();
+        $object->c = 5;
+        $manifest->setReturn(
+            'method',
+            function ($a, $b) {
+                $result = $a + $b + $this->c;
+                $this->c = 6;
+
+                return $result;
+            }
+        );
+        $this->assertSame(5, $object->c);
+        $this->assertSame(12, $manifest->call('method', [3, 4], $object));
+        $this->assertSame(6, $object->c);
+    }
 }
  
