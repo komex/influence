@@ -29,6 +29,8 @@ class Manifest
     private $return = [];
 
     /**
+     * Enable or disable register methods calls.
+     *
      * @param bool $register
      */
     public function registerCalls($register)
@@ -37,30 +39,51 @@ class Manifest
     }
 
     /**
+     * Register method call.
+     *
      * @param string $method
      * @param array $arguments
      */
     public function registerCall($method, array $arguments)
     {
         if ($this->registerCalls) {
-            if (empty($this->calls[$method])) {
-                $this->calls[$method] = [];
-            }
-            array_push($this->calls[$method], $arguments);
+            array_push($this->calls, [$method, $arguments]);
         }
     }
 
     /**
+     * Get all methods calls.
+     *
+     * @return array
+     */
+    public function getCalls()
+    {
+        return $this->calls;
+    }
+
+    /**
+     * Clear all methods calls.
+     */
+    public function clearCalls()
+    {
+        $this->calls = [];
+    }
+
+    /**
+     * Does we need to intercept call?
+     *
      * @param string $method
      *
      * @return bool
      */
     public function intercept($method)
     {
-        return !empty($this->return[$method]);
+        return array_key_exists($method, $this->return);
     }
 
     /**
+     * Set return value for specified method.
+     *
      * @param string $method
      * @param mixed $return
      */
@@ -70,6 +93,8 @@ class Manifest
     }
 
     /**
+     * Return custom value for specified method.
+     *
      * @param string $method
      * @param array $arguments
      * @param object|null $scope
