@@ -2,7 +2,7 @@
 /**
  * This file is a part of influence project.
  *
- * (c) Andrey Kolchenko <a.j.kolchenko@baltsoftservice.ru>
+ * (c) Andrey Kolchenko <andrey@kolchenko.me>
  */
 
 namespace Test\Influence\Transformer\Mode;
@@ -13,7 +13,7 @@ use Influence\Transformer\Transformer;
  * Class MethodModeTest
  *
  * @package Test\Influence\Transformer\Mode
- * @author Andrey Kolchenko <a.j.kolchenko@baltsoftservice.ru>
+ * @author Andrey Kolchenko <andrey@kolchenko.me>
  */
 class MethodModeTest extends \PHPUnit_Framework_TestCase
 {
