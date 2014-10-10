@@ -46,7 +46,7 @@ class Transformer implements TransformerInterface
         $this->registerMode(self::MODE_CLASS_BODY, new ClassBodyMode());
         $this->registerMode(self::MODE_METHOD, new MethodMode());
         $this->registerMode(self::MODE_AS_IS, new AsIsMode());
-        $this->setMode(self::MODE_FILE)->reset();
+        $this->reset();
     }
 
     /**
@@ -80,7 +80,7 @@ class Transformer implements TransformerInterface
      */
     public function reset($defaultValue = null)
     {
-        // TODO: Implement reset() method.
+        $this->setMode(self::MODE_FILE)->reset();
     }
 
     /**

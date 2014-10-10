@@ -18,6 +18,11 @@ use Influence\Transformer\Transformer;
 class Filter extends \php_user_filter
 {
     /**
+     * @var Transformer
+     */
+    private static $transformer;
+
+    /**
      * @param resource $in
      * @param resource $out
      * @param int $consumed
@@ -45,7 +50,11 @@ class Filter extends \php_user_filter
      */
     private function transform($content)
     {
-        $transformer = new Transformer();
+        if (self::$transformer === null) {
+            self::$transformer = new Transformer();
+        } else {
+            self::$transformer->reset();
+        }
         $tokens = token_get_all($content);
         $content = '';
         foreach ($tokens as $token) {
@@ -55,7 +64,7 @@ class Filter extends \php_user_filter
                 $code = null;
                 $value = $token;
             }
-            $content .= $transformer->transform($code, $value);
+            $content .= self::$transformer->transform($code, $value);
         }
 
         return $content;
