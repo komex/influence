@@ -51,6 +51,14 @@ class Manifest
     }
 
     /**
+     * @return array
+     */
+    public function getCalls()
+    {
+        return $this->calls;
+    }
+
+    /**
      * @param string $method
      *
      * @return bool
