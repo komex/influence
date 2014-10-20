@@ -36,17 +36,28 @@ class ManifestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test disabled calls registration.
+     */
+    public function testDisabledCallsRegister()
+    {
+        $manifest = new Manifest();
+        $this->assertInternalType('array', $manifest->getAllCalls());
+        $this->assertCount(0, $manifest);
+
+        $manifest->registerCall('method', []);
+        $this->assertCount(0, $manifest);
+
+        $manifest->registerCalls(false);
+        $manifest->registerCall('method2', ['args' => 4]);
+        $this->assertCount(0, $manifest);
+    }
+
+    /**
      * Test calls registration works fine.
      */
     public function testRegisterCall()
     {
         $manifest = new Manifest();
-        $this->assertInternalType('array', $manifest->getAllCalls());
-        $this->assertEmpty($manifest->getAllCalls());
-
-        $manifest->registerCall('method', []);
-        $this->assertEmpty($manifest->getAllCalls());
-
         $manifest->registerCalls(true);
         $manifest->registerCall('method', []);
         $manifest->registerCall('method2', ['args' => true]);
@@ -58,9 +69,27 @@ class ManifestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test filtering methods calls.
+     */
+    public function testGetMethodCalls()
+    {
+        $manifest = new Manifest();
+        $manifest->registerCalls(true);
+        $manifest->registerCall('method', []);
+        $manifest->registerCall('method2', ['args' => true]);
+        $manifest->registerCall('method3', []);
+        $manifest->registerCall('method', ['abc' => 4]);
+
+        $this->assertSame(2, $manifest->getCallsCount('method'));
+        $this->assertSame(1, $manifest->getCallsCount('method2'));
+        $this->assertSame([['method', []], ['method', ['abc' => 4]]], $manifest->getCalls('method'));
+        $this->assertSame([['method2', ['args' => true]]], $manifest->getCalls('method2'));
+    }
+
+    /**
      * Test we can clear methods calls.
      */
-    public function testClearRegisteredCalls()
+    public function testClearAllRegisteredCalls()
     {
         $manifest = new Manifest();
         $manifest->registerCalls(true);

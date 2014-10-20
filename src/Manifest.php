@@ -2,7 +2,7 @@
 /**
  * This file is a part of RemoteControl project.
  *
- * (c) Andrey Kolchenko <a.j.kolchenko@baltsoftservice.ru>
+ * (c) Andrey Kolchenko <andrey@kolchenko.me>
  */
 
 namespace Influence;
@@ -11,9 +11,9 @@ namespace Influence;
  * Class Manifest
  *
  * @package Influence
- * @author Andrey Kolchenko <a.j.kolchenko@baltsoftservice.ru>
+ * @author Andrey Kolchenko <andrey@kolchenko.me>
  */
-class Manifest
+class Manifest implements \Countable
 {
     /**
      * @var bool
@@ -52,13 +52,43 @@ class Manifest
     }
 
     /**
+     * @param string $method
+     *
+     * @return array|null
+     */
+    public function getCalls($method)
+    {
+        return $this->extractArguments($this->getMethodCalls($method));
+    }
+
+    /**
      * Get all methods calls.
      *
      * @return array
      */
     public function getAllCalls()
     {
-        return $this->calls;
+        return $this->extractArguments($this->calls);
+    }
+
+    /**
+     * @param string $method
+     *
+     * @return int
+     */
+    public function getCallsCount($method)
+    {
+        return count($this->getMethodCalls($method));
+    }
+
+    /**
+     * Count number of calls.
+     *
+     * @return int
+     */
+    public function count()
+    {
+        return count($this->calls);
     }
 
     /**
@@ -116,5 +146,41 @@ class Manifest
         } else {
             return $handler;
         }
+    }
+
+    /**
+     * @param array $calls
+     *
+     * @return array
+     */
+    private function extractArguments(array $calls)
+    {
+        $calls = array_map(
+            function (array $record) {
+                unset($record[1][1]);
+
+                return $record;
+            },
+            $calls
+        );
+
+        return $calls;
+    }
+
+    /**
+     * @param string $method
+     *
+     * @return array
+     */
+    private function getMethodCalls($method)
+    {
+        return array_values(
+            array_filter(
+                $this->calls,
+                function (array $record) use ($method) {
+                    return $record[0] === $method;
+                }
+            )
+        );
     }
 }
