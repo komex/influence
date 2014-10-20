@@ -21,6 +21,14 @@ class Filter extends \php_user_filter
      * @var Transformer
      */
     private static $transformer;
+    /**
+     * @var string
+     */
+    private $data = '';
+    /**
+     * @var resource
+     */
+    private $stream;
 
     /**
      * @param resource $in
@@ -32,15 +40,20 @@ class Filter extends \php_user_filter
      */
     public function filter($in, $out, &$consumed, $closing)
     {
-        /** @var \stdClass|resource $bucket */
-        while ($bucket = stream_bucket_make_writeable($in)) {
-            $bucket->data = $this->transform($bucket->data);
-            $bucket->datalen = strlen($bucket->data);
+        if ($closing) {
+            /** @var resource|\stdClass $bucket */
+            $bucket = stream_bucket_new($this->stream, $this->transform($this->data));
             $consumed += $bucket->datalen;
             stream_bucket_append($out, $bucket);
-        }
 
-        return PSFS_PASS_ON;
+            return PSFS_PASS_ON;
+        } else {
+            while ($bucket = stream_bucket_make_writeable($in)) {
+                $this->data .= $bucket->data;
+            }
+
+            return PSFS_FEED_ME;
+        }
     }
 
     /**

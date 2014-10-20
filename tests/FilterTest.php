@@ -24,7 +24,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
     public function dpTransform()
     {
         $dir = realpath(
-            join(DIRECTORY_SEPARATOR, [__DIR__, '..', 'vendor', 'symfony', 'yaml', 'Symfony', 'Component', 'Yaml'])
+            join(DIRECTORY_SEPARATOR, [__DIR__, '..', 'vendor', 'phpunit', 'phpunit', 'src', 'TextUI'])
         );
         $paths = array_map(
             function ($path) {
