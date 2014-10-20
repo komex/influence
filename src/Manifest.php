@@ -32,10 +32,14 @@ class Manifest implements \Countable
      * Enable or disable register methods calls.
      *
      * @param bool $register
+     *
+     * @return $this
      */
     public function registerCalls($register)
     {
         $this->registerCalls = (bool)$register;
+
+        return $this;
     }
 
     /**
@@ -43,22 +47,39 @@ class Manifest implements \Countable
      *
      * @param string $method
      * @param array $arguments
+     *
+     * @return $this
      */
     public function registerCall($method, array $arguments)
     {
         if ($this->registerCalls) {
             array_push($this->calls, [$method, $arguments]);
         }
+
+        return $this;
     }
 
     /**
      * @param string $method
      *
-     * @return array|null
+     * @return array
      */
     public function getCalls($method)
     {
-        return $this->extractArguments($this->getMethodCalls($method));
+        $calls = array_filter(
+            $this->calls,
+            function (array $record) use ($method) {
+                return $record[0] === $method;
+            }
+        );
+        $calls = array_map(
+            function (array $record) {
+                return $record[1];
+            },
+            $calls
+        );
+
+        return array_values($calls);
     }
 
     /**
@@ -68,7 +89,7 @@ class Manifest implements \Countable
      */
     public function getAllCalls()
     {
-        return $this->extractArguments($this->calls);
+        return $this->calls;
     }
 
     /**
@@ -78,7 +99,7 @@ class Manifest implements \Countable
      */
     public function getCallsCount($method)
     {
-        return count($this->getMethodCalls($method));
+        return count($this->getCalls($method));
     }
 
     /**
@@ -93,10 +114,31 @@ class Manifest implements \Countable
 
     /**
      * Clear all methods calls.
+     *
+     * @return $this
      */
     public function clearAllCalls()
     {
         $this->calls = [];
+
+        return $this;
+    }
+
+    /**
+     * @param string $method
+     *
+     * @return $this
+     */
+    public function clearCalls($method)
+    {
+        $this->calls = array_filter(
+            $this->calls,
+            function (array $record) use ($method) {
+                return $record[0] !== $method;
+            }
+        );
+
+        return $this;
     }
 
     /**
@@ -116,10 +158,14 @@ class Manifest implements \Countable
      *
      * @param string $method
      * @param mixed $return
+     *
+     * @return $this
      */
     public function setReturn($method, $return)
     {
         $this->return[$method] = $return;
+
+        return $this;
     }
 
     /**
@@ -146,41 +192,5 @@ class Manifest implements \Countable
         } else {
             return $handler;
         }
-    }
-
-    /**
-     * @param array $calls
-     *
-     * @return array
-     */
-    private function extractArguments(array $calls)
-    {
-        $calls = array_map(
-            function (array $record) {
-                unset($record[1][1]);
-
-                return $record;
-            },
-            $calls
-        );
-
-        return $calls;
-    }
-
-    /**
-     * @param string $method
-     *
-     * @return array
-     */
-    private function getMethodCalls($method)
-    {
-        return array_values(
-            array_filter(
-                $this->calls,
-                function (array $record) use ($method) {
-                    return $record[0] === $method;
-                }
-            )
-        );
     }
 }
