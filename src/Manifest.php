@@ -32,10 +32,14 @@ class Manifest implements \Countable
      * Enable or disable register methods calls.
      *
      * @param bool $register
+     *
+     * @return $this
      */
     public function registerCalls($register)
     {
         $this->registerCalls = (bool)$register;
+
+        return $this;
     }
 
     /**
@@ -43,12 +47,16 @@ class Manifest implements \Countable
      *
      * @param string $method
      * @param array $arguments
+     *
+     * @return $this
      */
     public function registerCall($method, array $arguments)
     {
         if ($this->registerCalls) {
             array_push($this->calls, [$method, $arguments]);
         }
+
+        return $this;
     }
 
     /**
@@ -93,10 +101,14 @@ class Manifest implements \Countable
 
     /**
      * Clear all methods calls.
+     *
+     * @return $this
      */
     public function clearAllCalls()
     {
         $this->calls = [];
+
+        return $this;
     }
 
     /**
@@ -116,10 +128,14 @@ class Manifest implements \Countable
      *
      * @param string $method
      * @param mixed $return
+     *
+     * @return $this
      */
     public function setReturn($method, $return)
     {
         $this->return[$method] = $return;
+
+        return $this;
     }
 
     /**
