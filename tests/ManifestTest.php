@@ -82,8 +82,8 @@ class ManifestTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame(2, $manifest->getCallsCount('method'));
         $this->assertSame(1, $manifest->getCallsCount('method2'));
-        $this->assertSame([['method', []], ['method', ['abc' => 4]]], $manifest->getCalls('method'));
-        $this->assertSame([['method2', ['args' => true]]], $manifest->getCalls('method2'));
+        $this->assertSame([[], ['abc' => 4]], $manifest->getCalls('method'));
+        $this->assertSame([['args' => true]], $manifest->getCalls('method2'));
     }
 
     /**
@@ -97,6 +97,21 @@ class ManifestTest extends \PHPUnit_Framework_TestCase
         $this->assertNotEmpty($manifest->getAllCalls());
         $manifest->clearAllCalls();
         $this->assertEmpty($manifest->getAllCalls());
+    }
+
+    /**
+     * Test we can clear specified method calls.
+     */
+    public function testClearMethodCalls()
+    {
+        $manifest = new Manifest();
+        $manifest->registerCalls(true);
+        $manifest->registerCall('method', ['a' => 'method']);
+        $manifest->registerCall('method2', ['a' => 'method2']);
+
+        $manifest->clearCalls('method');
+        $this->assertSame(0, $manifest->getCallsCount('method'));
+        $this->assertSame(1, $manifest->getCallsCount('method2'));
     }
 
     /**
