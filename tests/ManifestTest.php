@@ -41,20 +41,20 @@ class ManifestTest extends \PHPUnit_Framework_TestCase
     public function testRegisterCall()
     {
         $manifest = new Manifest();
-        $this->assertInternalType('array', $manifest->getCalls());
-        $this->assertEmpty($manifest->getCalls());
+        $this->assertInternalType('array', $manifest->getAllCalls());
+        $this->assertEmpty($manifest->getAllCalls());
 
         $manifest->registerCall('method', []);
-        $this->assertEmpty($manifest->getCalls());
+        $this->assertEmpty($manifest->getAllCalls());
 
         $manifest->registerCalls(true);
         $manifest->registerCall('method', []);
         $manifest->registerCall('method2', ['args' => true]);
-        $this->assertSame([['method', []], ['method2', ['args' => true]]], $manifest->getCalls());
+        $this->assertSame([['method', []], ['method2', ['args' => true]]], $manifest->getAllCalls());
 
         $manifest->registerCalls(false);
         $manifest->registerCall('method3', []);
-        $this->assertSame([['method', []], ['method2', ['args' => true]]], $manifest->getCalls());
+        $this->assertSame([['method', []], ['method2', ['args' => true]]], $manifest->getAllCalls());
     }
 
     /**
@@ -65,9 +65,9 @@ class ManifestTest extends \PHPUnit_Framework_TestCase
         $manifest = new Manifest();
         $manifest->registerCalls(true);
         $manifest->registerCall('method', []);
-        $this->assertNotEmpty($manifest->getCalls());
-        $manifest->clearCalls();
-        $this->assertEmpty($manifest->getCalls());
+        $this->assertNotEmpty($manifest->getAllCalls());
+        $manifest->clearAllCalls();
+        $this->assertEmpty($manifest->getAllCalls());
     }
 
     /**

@@ -56,7 +56,7 @@ class Manifest
      *
      * @return array
      */
-    public function getCalls()
+    public function getAllCalls()
     {
         return $this->calls;
     }
@@ -64,7 +64,7 @@ class Manifest
     /**
      * Clear all methods calls.
      */
-    public function clearCalls()
+    public function clearAllCalls()
     {
         $this->calls = [];
     }
