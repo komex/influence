@@ -83,4 +83,13 @@ class RemoteControlTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse(RC::control($object1)->intercept('method'));
         $this->assertTrue(RC::control($object2)->intercept('method'));
     }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Target must be an object or string class name.
+     */
+    public function testInvalidTarget()
+    {
+        RC::isUnderControl(5);
+    }
 }
