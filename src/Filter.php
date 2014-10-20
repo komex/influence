@@ -14,6 +14,8 @@ use Influence\Transformer\Transformer;
  *
  * @package Influence
  * @author Andrey Kolchenko <andrey@kolchenko.me>
+ *
+ * @property resource $stream
  */
 class Filter extends \php_user_filter
 {
@@ -25,10 +27,6 @@ class Filter extends \php_user_filter
      * @var string
      */
     private $data = '';
-    /**
-     * @var resource
-     */
-    private $stream;
 
     /**
      * @param resource $in
@@ -43,6 +41,7 @@ class Filter extends \php_user_filter
         if ($closing) {
             /** @var resource|\stdClass $bucket */
             $bucket = stream_bucket_new($this->stream, $this->transform($this->data));
+            $this->data = '';
             $consumed += $bucket->datalen;
             stream_bucket_append($out, $bucket);
 
