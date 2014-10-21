@@ -152,6 +152,21 @@ class ManifestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test return to default method behavior.
+     */
+    public function testDefaultReturn()
+    {
+        $manifest = new Manifest();
+        $manifest->setReturn('method', 5);
+        $manifest->setReturn('method2', 6);
+        $this->assertTrue($manifest->intercept('method'));
+        $this->assertTrue($manifest->intercept('method2'));
+        $manifest->setDefault('method');
+        $this->assertFalse($manifest->intercept('method'));
+        $this->assertTrue($manifest->intercept('method2'));
+    }
+
+    /**
      * Test call with simple Closure.
      */
     public function testCallWithClosure()
