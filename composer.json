@@ -3,7 +3,7 @@
     "description": "Mocking any objects and classes",
     "keywords": ["php", "testing", "test", "mock", "stub", "unit", "UnitTest"],
     "minimum-stability": "stable",
-    "license": "CC-BY-SA-3.0",
+    "license": "CC BY-SA 4.0",
     "authors": [
         {
             "name": "Andrey Kolchenko",

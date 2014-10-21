@@ -161,9 +161,23 @@ class Manifest implements \Countable
      *
      * @return $this
      */
-    public function setReturn($method, $return)
+    public function setReturn($method, $return = null)
     {
         $this->return[$method] = $return;
+
+        return $this;
+    }
+
+    /**
+     * Use default behavior of method.
+     *
+     * @param string $method
+     *
+     * @return $this
+     */
+    public function setDefault($method)
+    {
+        unset($this->return[$method]);
 
         return $this;
     }
