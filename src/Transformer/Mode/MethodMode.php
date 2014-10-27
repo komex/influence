@@ -88,7 +88,7 @@ class MethodMode extends AbstractMode
         $manifest = uniqid('$manifest_');
 
         $code = <<<EOL
-if (\\Influence\\RemoteControl::isUnderControl($target)) {
+if (\\Influence\\RemoteControl::isUnderControl($target, __FUNCTION__)) {
     ${manifest} = \\Influence\\RemoteControl::control($target);
     ${manifest}->registerCall(__FUNCTION__, func_get_args());
     if (${manifest}->intercept(__FUNCTION__)) {

@@ -29,6 +29,14 @@ class Manifest implements \Countable
     private $return = [];
 
     /**
+     * Reset log.
+     */
+    public function __clone()
+    {
+        $this->calls = [];
+    }
+
+    /**
      * Enable or disable register methods calls.
      *
      * @param bool $register
