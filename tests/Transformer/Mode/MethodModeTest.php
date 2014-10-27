@@ -18,14 +18,6 @@ use Influence\Transformer\Transformer;
 class MethodModeTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Length of static injected code
-     */
-    const STATIC_CODE_LENGTH = 337;
-    /**
-     * Length of injected code
-     */
-    const CODE_LENGTH = 312;
-    /**
      * @var Transformer
      */
     private static $transformer;
@@ -35,11 +27,7 @@ class MethodModeTest extends \PHPUnit_Framework_TestCase
      */
     public function dpMethodContent()
     {
-        return [
-            ['__construct', false, self::STATIC_CODE_LENGTH],
-            ['staticMethod', true, self::STATIC_CODE_LENGTH],
-            ['method', false, self::CODE_LENGTH],
-        ];
+        return [['__construct', false], ['staticMethod', true], ['method', false]];
     }
 
     /**
@@ -47,11 +35,10 @@ class MethodModeTest extends \PHPUnit_Framework_TestCase
      *
      * @param string $name
      * @param bool $reset
-     * @param int $length
      *
      * @dataProvider dpMethodContent
      */
-    public function testTransformMethodContent($name, $reset, $length)
+    public function testTransformMethodContent($name, $reset)
     {
         $mode = $this->getMode();
         $mode->reset($reset);
@@ -67,7 +54,7 @@ class MethodModeTest extends \PHPUnit_Framework_TestCase
         }
         $this->assertStringStartsWith($name . '() {', $content);
         $this->assertStringEndsWith('}', $content);
-        $this->assertSame((strlen($name) + 5 + $length), strlen($content));
+        $this->assertGreaterThan((strlen($name) + 5), strlen($content));
     }
 
     /**
