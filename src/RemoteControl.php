@@ -2,7 +2,7 @@
 /**
  * This file is a part of RemoteControl project.
  *
- * (c) Andrey Kolchenko <a.j.kolchenko@baltsoftservice.ru>
+ * (c) Andrey Kolchenko <andrey@kolchenko.me>
  */
 
 namespace Influence;
@@ -11,14 +11,22 @@ namespace Influence;
  * Class RemoteControl
  *
  * @package Influence
- * @author Andrey Kolchenko <a.j.kolchenko@baltsoftservice.ru>
+ * @author Andrey Kolchenko <andrey@kolchenko.me>
  */
 class RemoteControl
 {
     /**
      * @var Manifest[]
      */
-    private static $map = [];
+    private static $classes = [];
+    /**
+     * @var Manifest[]
+     */
+    private static $objects = [];
+    /**
+     * @var Manifest[]
+     */
+    private static $newInstances = [];
 
     /**
      * @param object|string $target
@@ -26,69 +34,141 @@ class RemoteControl
      * @return Manifest
      * @throws \InvalidArgumentException
      */
-    public static function control($target)
+    public static function controlStatic($target)
     {
         if (is_object($target)) {
-            $id = spl_object_hash($target);
-            if (empty(self::$map[$id])) {
-                $staticId = ltrim(get_class($target), '\\');
-                if (isset(self::$map[$staticId])) {
-                    self::$map[$id] = clone self::$map[$staticId];
+            $target = ltrim(get_class($target), '\\');
+        } elseif (is_string($target) and class_exists($target, false)) {
+            $target = ltrim($target, '\\');
+        } else {
+            throw new \InvalidArgumentException('Target must be an object or string of class name.');
+        }
+        if (empty(self::$classes[$target])) {
+            self::$classes[$target] = new Manifest();
+        }
+
+        return self::$classes[$target];
+    }
+
+    /**
+     * @param object|string $target
+     *
+     * @throws \InvalidArgumentException
+     */
+    public static function removeControlStatic($target)
+    {
+        if (is_object($target)) {
+            $class = ltrim(get_class($target), '\\');
+        } elseif (is_string($target) and class_exists($target, false)) {
+            $class = ltrim($target, '\\');
+        } else {
+            throw new \InvalidArgumentException('Target must be an object or string of class name.');
+        }
+        unset(self::$classes[$class]);
+    }
+
+    /**
+     * @param string $class
+     *
+     * @return Manifest
+     * @throws \InvalidArgumentException
+     */
+    public static function controlNewInstance($class)
+    {
+        $class = ltrim($class, '\\');
+        if (class_exists($class, false)) {
+            self::$newInstances[$class] = new Manifest();
+
+            return self::$newInstances[$class];
+        } else {
+            throw new \InvalidArgumentException('Class ' . $class . ' does not exists.');
+        }
+    }
+
+    /**
+     * @param string $class
+     */
+    public static function removeControlNewInstance($class)
+    {
+        $class = ltrim($class, '\\');
+        unset(self::$newInstances[$class]);
+    }
+
+    /**
+     * @param object $object
+     *
+     * @return Manifest
+     * @throws \InvalidArgumentException
+     */
+    public static function controlObject($object)
+    {
+        if (is_object($object)) {
+            $hash = spl_object_hash($object);
+            if (empty(self::$objects[$hash])) {
+                $class = ltrim(get_class($object), '\\');
+                if (isset(self::$newInstances[$class])) {
+                    self::$objects[$hash] = clone self::$newInstances[$class];
                 } else {
-                    self::$map[$id] = new Manifest();
+                    self::$objects[$hash] = new Manifest();
                 }
             }
-        } elseif (is_string($target)) {
-            $id = ltrim($target, '\\');
-            if (empty(self::$map[$id])) {
-                self::$map[$id] = new Manifest();
-            }
-        } else {
-            throw new \InvalidArgumentException('Target must be an object or string of class name.');
-        }
 
-        return self::$map[$id];
+            return self::$objects[$hash];
+        } else {
+            throw new \InvalidArgumentException('Target must be an object.');
+        }
     }
 
     /**
-     * @param object|string $target
+     * Test if static method is under control.
      *
-     * @param string $method
+     * @param string $class Class name
+     * @param string $method Method name
      *
-     * @throws \InvalidArgumentException
      * @return bool
      */
-    public static function isUnderControl($target, $method)
+    public static function isUnderControlStatic($class, $method)
     {
-        if (is_object($target)) {
-            $id = spl_object_hash($target);
-            if (empty(self::$map[$id])) {
-                $id = ltrim(get_class($target), '\\');
-            }
-        } elseif (is_string($target)) {
-            $id = ltrim($target, '\\');
-        } else {
-            throw new \InvalidArgumentException('Target must be an object or string of class name.');
-        }
+        $class = ltrim($class, '\\');
 
-        return (isset(self::$map[$id]) and self::$map[$id]->intercept($method));
+        return (isset(self::$classes[$class]) and self::$classes[$class]->intercept($method));
     }
 
     /**
-     * @param object|string $target
+     * @param object|string $object
+     * @param string $method
+     *
+     * @return bool
+     * @throws \InvalidArgumentException
+     */
+    public static function isUnderControlObject($object, $method)
+    {
+        if (is_object($object)) {
+            $hash = spl_object_hash($object);
+            if (empty(self::$objects[$hash])) {
+                $class = ltrim(get_class($object), '\\');
+
+                return (isset(self::$newInstances[$class]) and self::$newInstances[$class]->intercept($method));
+            } else {
+                return self::$objects[$hash]->intercept($method);
+            }
+        } else {
+            throw new \InvalidArgumentException('Target must be an object.');
+        }
+    }
+
+    /**
+     * @param object $object
      *
      * @throws \InvalidArgumentException
      */
-    public static function removeControl($target)
+    public function removeControlObject($object)
     {
-        if (is_object($target)) {
-            $id = spl_object_hash($target);
-        } elseif (is_string($target)) {
-            $id = ltrim($target, '\\');
+        if (is_object($object)) {
+            $hash = spl_object_hash($object);
+            unset(self::$objects[$hash]);
         } else {
-            throw new \InvalidArgumentException('Target must be an object or string of class name.');
+            throw new \InvalidArgumentException('Target must be an object.');
         }
-
-        unset(self::$map[$id]);
     }
 }
