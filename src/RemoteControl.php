@@ -36,18 +36,12 @@ class RemoteControl
      */
     public static function controlStatic($target)
     {
-        if (is_object($target)) {
-            $target = ltrim(get_class($target), '\\');
-        } elseif (is_string($target) and class_exists($target, false)) {
-            $target = ltrim($target, '\\');
-        } else {
-            throw new \InvalidArgumentException('Target must be an object or string of class name.');
-        }
-        if (empty(self::$classes[$target])) {
-            self::$classes[$target] = new Manifest();
+        $class = self::getClassName($target);
+        if (empty(self::$classes[$class])) {
+            self::$classes[$class] = new Manifest();
         }
 
-        return self::$classes[$target];
+        return self::$classes[$class];
     }
 
     /**
@@ -57,14 +51,7 @@ class RemoteControl
      */
     public static function removeControlStatic($target)
     {
-        if (is_object($target)) {
-            $class = ltrim(get_class($target), '\\');
-        } elseif (is_string($target) and class_exists($target, false)) {
-            $class = ltrim($target, '\\');
-        } else {
-            throw new \InvalidArgumentException('Target must be an object or string of class name.');
-        }
-        unset(self::$classes[$class]);
+        unset(self::$classes[self::getClassName($target)]);
     }
 
     /**
@@ -162,7 +149,7 @@ class RemoteControl
      *
      * @throws \InvalidArgumentException
      */
-    public function removeControlObject($object)
+    public static function removeControlObject($object)
     {
         if (is_object($object)) {
             $hash = spl_object_hash($object);
@@ -170,5 +157,26 @@ class RemoteControl
         } else {
             throw new \InvalidArgumentException('Target must be an object.');
         }
+    }
+
+    /**
+     * Get correct class name.
+     *
+     * @param object|string $target
+     *
+     * @return string Class name
+     * @throws \InvalidArgumentException
+     */
+    private static function getClassName($target)
+    {
+        if (is_object($target)) {
+            $class = ltrim(get_class($target), '\\');
+        } elseif (is_string($target) and class_exists($target)) {
+            $class = ltrim($target, '\\');
+        } else {
+            throw new \InvalidArgumentException('Target must be an object or string of class name.');
+        }
+
+        return $class;
     }
 }

@@ -23,6 +23,33 @@ class RemoteControlTest extends \PHPUnit_Framework_TestCase
     const SIMPLE_CLASS_NAME = 'Test\\Influence\\SimpleClass';
 
     /**
+     * Test getting class name.
+     */
+    public function testGetClassName()
+    {
+        $method = new \ReflectionMethod('Influence\RemoteControl', 'getClassName');
+        $method->setAccessible(true);
+        $this->assertSame(self::SIMPLE_CLASS_NAME, $method->invoke(null, self::SIMPLE_CLASS_NAME));
+        $this->assertSame(self::SIMPLE_CLASS_NAME, $method->invoke(null, '\\' . self::SIMPLE_CLASS_NAME));
+        $this->assertSame(self::SIMPLE_CLASS_NAME, $method->invoke(null, new SimpleClass()));
+    }
+
+    /**
+     * Test getting invalid class name.
+     *
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Target must be an object or string of class name.
+     *
+     * @dataProvider dpControlStaticInvalidArgument
+     */
+    public function testGetClassNameInvalid($target)
+    {
+        $method = new \ReflectionMethod('Influence\RemoteControl', 'getClassName');
+        $method->setAccessible(true);
+        $this->assertSame(self::SIMPLE_CLASS_NAME, $method->invoke(null, $target));
+    }
+
+    /**
      * Test default behavior of synthetic class.
      */
     public function testDefaultClassBehavior()
@@ -30,6 +57,19 @@ class RemoteControlTest extends \PHPUnit_Framework_TestCase
         $class = new SimpleClass();
         $this->assertSame(self::SIMPLE_CLASS_NAME . '::method', $class->method());
         $this->assertSame(self::SIMPLE_CLASS_NAME . '::staticMethod', $class->staticMethod());
+        $this->assertFalse(RC::isUnderControlObject($class, 'method'));
+        $this->assertFalse(RC::isUnderControlStatic(self::SIMPLE_CLASS_NAME, 'staticMethod'));
+    }
+
+    /**
+     * Test control static methods with specify class name of object.
+     */
+    public function testControlStaticObject()
+    {
+        $class = new SimpleClass();
+        RC::controlStatic($class)->setReturn('staticMethod', 5);
+        $this->assertSame(5, SimpleClass::staticMethod());
+        RC::removeControlStatic(self::SIMPLE_CLASS_NAME);
     }
 
     /**
@@ -37,11 +77,11 @@ class RemoteControlTest extends \PHPUnit_Framework_TestCase
      */
     public function testControlStaticClassName()
     {
-        $this->assertFalse(RC::isUnderControlStatic(self::SIMPLE_CLASS_NAME, 'staticMethod'));
         RC::controlStatic(self::SIMPLE_CLASS_NAME)->setReturn('staticMethod', 5);
         $this->assertSame(5, SimpleClass::staticMethod());
         RC::controlStatic('\\' . self::SIMPLE_CLASS_NAME)->setReturn('staticMethod', 6);
         $this->assertSame(6, SimpleClass::staticMethod());
+        RC::removeControlStatic(self::SIMPLE_CLASS_NAME);
     }
 
     /**
