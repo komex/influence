@@ -169,6 +169,19 @@ class RemoteControlTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test control different objects.
+     */
+    public function testControlObject()
+    {
+        $class1 = new SimpleClass();
+        $class2 = new SimpleClass();
+        RC::controlObject($class1)->setReturn('method', 5);
+        RC::controlObject($class2)->setReturn('method', 6);
+        $this->assertSame(5, $class1->method());
+        $this->assertSame(6, $class2->method());
+    }
+
+    /**
      * Cleanup.
      */
     protected function tearDown()
