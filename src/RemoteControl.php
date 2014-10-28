@@ -70,21 +70,17 @@ class RemoteControl
      */
     public static function controlObject($object)
     {
-        if (is_object($object)) {
-            $hash = spl_object_hash($object);
-            if (empty(self::$objects[$hash])) {
-                $class = ltrim(get_class($object), '\\');
-                if (isset(self::$newInstances[$class])) {
-                    self::$objects[$hash] = clone self::$newInstances[$class];
-                } else {
-                    self::$objects[$hash] = new Manifest();
-                }
+        $hash = self::getObjectHash($object);
+        if (empty(self::$objects[$hash])) {
+            $class = ltrim(get_class($object), '\\');
+            if (isset(self::$newInstances[$class])) {
+                self::$objects[$hash] = clone self::$newInstances[$class];
+            } else {
+                self::$objects[$hash] = new Manifest();
             }
-
-            return self::$objects[$hash];
-        } else {
-            throw new \InvalidArgumentException('Target must be an object.');
         }
+
+        return self::$objects[$hash];
     }
 
     /**
@@ -112,12 +108,7 @@ class RemoteControl
      */
     public static function removeControlObject($object)
     {
-        if (is_object($object)) {
-            $hash = spl_object_hash($object);
-            unset(self::$objects[$hash]);
-        } else {
-            throw new \InvalidArgumentException('Target must be an object.');
-        }
+        unset(self::$objects[self::getObjectHash($object)]);
     }
 
     /**
@@ -144,17 +135,13 @@ class RemoteControl
      */
     public static function isUnderControlObject($object, $method)
     {
-        if (is_object($object)) {
-            $hash = spl_object_hash($object);
-            if (empty(self::$objects[$hash])) {
-                $class = ltrim(get_class($object), '\\');
+        $hash = self::getObjectHash($object);
+        if (empty(self::$objects[$hash])) {
+            $class = ltrim(get_class($object), '\\');
 
-                return (isset(self::$newInstances[$class]) and self::$newInstances[$class]->intercept($method));
-            } else {
-                return self::$objects[$hash]->intercept($method);
-            }
+            return (isset(self::$newInstances[$class]) and self::$newInstances[$class]->intercept($method));
         } else {
-            throw new \InvalidArgumentException('Target must be an object.');
+            return self::$objects[$hash]->intercept($method);
         }
     }
 
@@ -177,5 +164,22 @@ class RemoteControl
         }
 
         return $class;
+    }
+
+    /**
+     * Get hash of object.
+     *
+     * @param object $object
+     *
+     * @return string
+     * @throws \InvalidArgumentException
+     */
+    private static function getObjectHash($object)
+    {
+        if (is_object($object)) {
+            return spl_object_hash($object);
+        } else {
+            throw new \InvalidArgumentException('Target must be an object.');
+        }
     }
 }
