@@ -212,6 +212,21 @@ class RemoteControlTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Remove control from specified object.
+     */
+    public function testRemoveControlObject()
+    {
+        $class1 = new SimpleClass();
+        $class2 = new SimpleClass();
+        RC::controlObject($class1)->setReturn('method', __FUNCTION__);
+        RC::controlObject($class2)->setReturn('method', __FUNCTION__);
+        RC::removeControlObject($class1);
+        $this->assertSame(self::SIMPLE_CLASS_NAME . '::method', $class1->method());
+        $this->assertSame(__FUNCTION__, $class2->method());
+        RC::removeControlObject($class2);
+    }
+
+    /**
      * Cleanup.
      */
     protected function tearDown()
