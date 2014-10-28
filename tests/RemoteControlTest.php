@@ -110,6 +110,26 @@ class RemoteControlTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test remove control from class by its name.
+     */
+    public function testRemoveControlStaticClassName()
+    {
+        RC::controlStatic(self::SIMPLE_CLASS_NAME)->setReturn('staticMethod', 5);
+        RC::removeControlStatic(self::SIMPLE_CLASS_NAME);
+        $this->assertFalse(RC::isUnderControlStatic(self::SIMPLE_CLASS_NAME, 'staticMethod'));
+    }
+
+    /**
+     * Test remove control from class by object class name.
+     */
+    public function testRemoveControlStaticObject()
+    {
+        RC::controlStatic(self::SIMPLE_CLASS_NAME)->setReturn('staticMethod', 5);
+        RC::removeControlStatic(new SimpleClass());
+        $this->assertFalse(RC::isUnderControlStatic(self::SIMPLE_CLASS_NAME, 'staticMethod'));
+    }
+
+    /**
      * @return array
      */
     public function dpControlStaticInvalidArgument()
