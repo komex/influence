@@ -36,7 +36,7 @@ class RemoteControl
      * @return Manifest
      * @throws \InvalidArgumentException
      */
-    public static function controlStatic($class)
+    public static function getStatic($class)
     {
         $class = self::getClassName($class);
         if (empty(self::$classes[$class])) {
@@ -52,7 +52,7 @@ class RemoteControl
      * @return Manifest
      * @throws \InvalidArgumentException
      */
-    public static function controlNewInstance($class)
+    public static function getNewInstance($class)
     {
         $class = self::getClassName($class);
         self::$newInstances[$class] = new Manifest();
@@ -66,7 +66,7 @@ class RemoteControl
      * @return Manifest
      * @throws \InvalidArgumentException
      */
-    public static function controlObject($object)
+    public static function getObject($object)
     {
         $hash = self::getObjectHash($object);
         if (empty(self::$objects[$hash])) {
@@ -86,7 +86,7 @@ class RemoteControl
      *
      * @throws \InvalidArgumentException
      */
-    public static function removeControlStatic($class)
+    public static function removeStatic($class)
     {
         unset(self::$classes[self::getClassName($class)]);
     }
@@ -94,7 +94,7 @@ class RemoteControl
     /**
      * @param object|string $class
      */
-    public static function removeControlNewInstance($class)
+    public static function removeNewInstance($class)
     {
         unset(self::$newInstances[self::getClassName($class)]);
     }
@@ -104,7 +104,7 @@ class RemoteControl
      *
      * @throws \InvalidArgumentException
      */
-    public static function removeControlObject($object)
+    public static function removeObject($object)
     {
         unset(self::$objects[self::getObjectHash($object)]);
     }
@@ -117,7 +117,7 @@ class RemoteControl
      *
      * @return bool
      */
-    public static function isUnderControlStatic($class, $method)
+    public static function hasStatic($class, $method)
     {
         $class = self::getClassName($class);
 
@@ -131,7 +131,7 @@ class RemoteControl
      * @return bool
      * @throws \InvalidArgumentException
      */
-    public static function isUnderControlObject($object, $method)
+    public static function hasObject($object, $method)
     {
         $hash = self::getObjectHash($object);
         if (empty(self::$objects[$hash])) {

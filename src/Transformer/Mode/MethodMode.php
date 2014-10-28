@@ -86,8 +86,8 @@ class MethodMode extends AbstractMode
         $target = $isStatic ? 'get_called_class()' : '$this';
         $scope = $isStatic ? '__CLASS__' : '$this';
         $type = $isStatic ? 'Static' : 'Object';
-        $isUnderControl = sprintf('\\Influence\\RemoteControl::isUnderControl%s(%s, __FUNCTION__)', $type, $target);
-        $control = sprintf('\\Influence\\RemoteControl::control%s(%s)', $type, $target);
+        $isUnderControl = sprintf('\\Influence\\RemoteControl::has%s(%s, __FUNCTION__)', $type, $target);
+        $control = sprintf('\\Influence\\RemoteControl::get%s(%s)', $type, $target);
         $manifest = uniqid('$manifest_');
 
         $code = <<<EOL
