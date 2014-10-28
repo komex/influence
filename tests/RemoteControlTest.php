@@ -227,6 +227,30 @@ class RemoteControlTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test remove control for new instances before cloning.
+     */
+    public function testRemoveControlNewInstanceBeforeClone()
+    {
+        $class = new SimpleClass();
+        RC::controlNewInstance(self::SIMPLE_CLASS_NAME)->setReturn('method', __FUNCTION__);
+        RC::removeControlNewInstance($class);
+        $this->assertSame(self::SIMPLE_CLASS_NAME . '::method', $class->method());
+    }
+
+    /**
+     * Test remove control for new instances with cloning.
+     */
+    public function testRemoveControlNewInstanceAfterClone()
+    {
+        $class1 = new SimpleClass();
+        $class2 = new SimpleClass();
+        RC::controlNewInstance(self::SIMPLE_CLASS_NAME)->setReturn('method', __FUNCTION__);
+        $this->assertSame(__FUNCTION__, $class1->method());
+        RC::removeControlNewInstance(self::SIMPLE_CLASS_NAME);
+        $this->assertSame(self::SIMPLE_CLASS_NAME . '::method', $class2->method());
+    }
+
+    /**
      * Cleanup.
      */
     protected function tearDown()
