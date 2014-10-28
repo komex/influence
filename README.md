@@ -1,6 +1,8 @@
+[![Build Status](https://travis-ci.org/komex/influence.svg?branch=master)](https://travis-ci.org/komex/influence)
+[![Code Coverage](https://scrutinizer-ci.com/g/komex/influence/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/komex/influence/?branch=master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/komex/influence/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/komex/influence/?branch=master)
 [![Latest Stable Version](https://poser.pugx.org/komex/influence/v/stable.svg)](https://packagist.org/packages/komex/influence)
 [![License](https://poser.pugx.org/komex/influence/license.svg)](https://packagist.org/packages/komex/influence)
-[![Build Status](https://travis-ci.org/komex/influence.svg?branch=master)](https://travis-ci.org/komex/influence)
 
 # Influence
 
