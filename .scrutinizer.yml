@@ -1,8 +1,7 @@
 before_commands:
     - "composer install --prefer-source"
 tools:
-    external_code_coverage:
-        timeout: 600
+    external_code_coverage: true
     php_code_coverage:
         enabled: true
         test_command: ./vendor/bin/phpunit
