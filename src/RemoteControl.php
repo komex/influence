@@ -7,6 +7,8 @@
 
 namespace Influence;
 
+use Influence\Manifest\Manifest;
+
 /**
  * Class RemoteControl
  *

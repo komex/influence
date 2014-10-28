@@ -5,9 +5,10 @@
  * (c) Andrey Kolchenko <andrey@kolchenko.me>
  */
 
-namespace Test\Influence;
+namespace Test\Influence\Manifest;
 
-use Influence\Manifest;
+use Influence\Manifest\Manifest;
+use Test\Influence\SimpleClass;
 
 /**
  * Class ManifestTest

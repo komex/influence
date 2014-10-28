@@ -5,7 +5,7 @@
  * (c) Andrey Kolchenko <andrey@kolchenko.me>
  */
 
-namespace Influence;
+namespace Influence\Manifest;
 
 /**
  * Class Manifest
