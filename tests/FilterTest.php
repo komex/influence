@@ -9,7 +9,6 @@ namespace Test\Influence;
 
 use Influence\Filter;
 
-
 /**
  * Class FilterTest
  *
