@@ -23,11 +23,38 @@ class RemoteControlTest extends \PHPUnit_Framework_TestCase
     const SIMPLE_CLASS_NAME = 'Test\\Influence\\SimpleClass';
 
     /**
+     * Test getting hash of object.
+     */
+    public function testGetObjectHash()
+    {
+        $method = new \ReflectionMethod('Influence\\RemoteControl', 'getObjectHash');
+        $method->setAccessible(true);
+        $hash = $method->invoke(null, new SimpleClass());
+        $this->assertInternalType('string', $hash);
+        $this->assertNotEmpty($hash);
+    }
+
+    /**
+     * Test getting invalid class name.
+     *
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Target must be an object.
+     *
+     * @dataProvider dpControlStaticInvalidArgument
+     */
+    public function testGetObjectHashInvalid($target)
+    {
+        $method = new \ReflectionMethod('Influence\RemoteControl', 'getObjectHash');
+        $method->setAccessible(true);
+        $method->invoke(null, $target);
+    }
+
+    /**
      * Test getting class name.
      */
     public function testGetClassName()
     {
-        $method = new \ReflectionMethod('Influence\RemoteControl', 'getClassName');
+        $method = new \ReflectionMethod('Influence\\RemoteControl', 'getClassName');
         $method->setAccessible(true);
         $this->assertSame(self::SIMPLE_CLASS_NAME, $method->invoke(null, self::SIMPLE_CLASS_NAME));
         $this->assertSame(self::SIMPLE_CLASS_NAME, $method->invoke(null, '\\' . self::SIMPLE_CLASS_NAME));
@@ -46,7 +73,7 @@ class RemoteControlTest extends \PHPUnit_Framework_TestCase
     {
         $method = new \ReflectionMethod('Influence\RemoteControl', 'getClassName');
         $method->setAccessible(true);
-        $this->assertSame(self::SIMPLE_CLASS_NAME, $method->invoke(null, $target));
+        $method->invoke(null, $target);
     }
 
     /**

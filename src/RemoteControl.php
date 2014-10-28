@@ -45,21 +45,17 @@ class RemoteControl
     }
 
     /**
-     * @param string $class
+     * @param object|string $class
      *
      * @return Manifest
      * @throws \InvalidArgumentException
      */
     public static function controlNewInstance($class)
     {
-        $class = ltrim($class, '\\');
-        if (class_exists($class, false)) {
-            self::$newInstances[$class] = new Manifest();
+        $class = self::getClassName($class);
+        self::$newInstances[$class] = new Manifest();
 
-            return self::$newInstances[$class];
-        } else {
-            throw new \InvalidArgumentException('Class ' . $class . ' does not exists.');
-        }
+        return self::$newInstances[$class];
     }
 
     /**
@@ -72,7 +68,7 @@ class RemoteControl
     {
         $hash = self::getObjectHash($object);
         if (empty(self::$objects[$hash])) {
-            $class = ltrim(get_class($object), '\\');
+            $class = self::getClassName($object);
             if (isset(self::$newInstances[$class])) {
                 self::$objects[$hash] = clone self::$newInstances[$class];
             } else {
@@ -137,7 +133,7 @@ class RemoteControl
     {
         $hash = self::getObjectHash($object);
         if (empty(self::$objects[$hash])) {
-            $class = ltrim(get_class($object), '\\');
+            $class = $class = self::getClassName($object);
 
             return (isset(self::$newInstances[$class]) and self::$newInstances[$class]->intercept($method));
         } else {
