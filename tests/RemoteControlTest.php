@@ -94,8 +94,8 @@ class RemoteControlTest extends \PHPUnit_Framework_TestCase
     public function testControlStaticObject()
     {
         $class = new SimpleClass();
-        RC::controlStatic($class)->setReturn('staticMethod', 5);
-        $this->assertSame(5, SimpleClass::staticMethod());
+        RC::controlStatic($class)->setReturn('staticMethod', __FUNCTION__);
+        $this->assertSame(__FUNCTION__, SimpleClass::staticMethod());
     }
 
     /**
@@ -103,10 +103,10 @@ class RemoteControlTest extends \PHPUnit_Framework_TestCase
      */
     public function testControlStaticClassName()
     {
-        RC::controlStatic(self::SIMPLE_CLASS_NAME)->setReturn('staticMethod', 5);
-        $this->assertSame(5, SimpleClass::staticMethod());
-        RC::controlStatic('\\' . self::SIMPLE_CLASS_NAME)->setReturn('staticMethod', 6);
-        $this->assertSame(6, SimpleClass::staticMethod());
+        RC::controlStatic(self::SIMPLE_CLASS_NAME)->setReturn('staticMethod', __CLASS__);
+        $this->assertSame(__CLASS__, SimpleClass::staticMethod());
+        RC::controlStatic('\\' . self::SIMPLE_CLASS_NAME)->setReturn('staticMethod', __FUNCTION__);
+        $this->assertSame(__FUNCTION__, SimpleClass::staticMethod());
     }
 
     /**
@@ -114,7 +114,7 @@ class RemoteControlTest extends \PHPUnit_Framework_TestCase
      */
     public function testRemoveControlStaticClassName()
     {
-        RC::controlStatic(self::SIMPLE_CLASS_NAME)->setReturn('staticMethod', 5);
+        RC::controlStatic(self::SIMPLE_CLASS_NAME)->setReturn('staticMethod', __FUNCTION__);
         RC::removeControlStatic(self::SIMPLE_CLASS_NAME);
         $this->assertFalse(RC::isUnderControlStatic(self::SIMPLE_CLASS_NAME, 'staticMethod'));
     }
@@ -124,7 +124,7 @@ class RemoteControlTest extends \PHPUnit_Framework_TestCase
      */
     public function testRemoveControlStaticObject()
     {
-        RC::controlStatic(self::SIMPLE_CLASS_NAME)->setReturn('staticMethod', 5);
+        RC::controlStatic(self::SIMPLE_CLASS_NAME)->setReturn('staticMethod', __FUNCTION__);
         RC::removeControlStatic(new SimpleClass());
         $this->assertFalse(RC::isUnderControlStatic(self::SIMPLE_CLASS_NAME, 'staticMethod'));
     }
@@ -137,7 +137,7 @@ class RemoteControlTest extends \PHPUnit_Framework_TestCase
         $class = new SimpleClass();
         $this->assertFalse(RC::isUnderControlStatic(self::SIMPLE_CLASS_NAME, 'staticMethod'));
         $this->assertFalse(RC::isUnderControlStatic($class, 'staticMethod'));
-        RC::controlStatic(self::SIMPLE_CLASS_NAME)->setReturn('staticMethod', 5);
+        RC::controlStatic(self::SIMPLE_CLASS_NAME)->setReturn('staticMethod', __FUNCTION__);
         $this->assertTrue(RC::isUnderControlStatic(self::SIMPLE_CLASS_NAME, 'staticMethod'));
         $this->assertTrue(RC::isUnderControlStatic($class, 'staticMethod'));
     }
@@ -175,10 +175,40 @@ class RemoteControlTest extends \PHPUnit_Framework_TestCase
     {
         $class1 = new SimpleClass();
         $class2 = new SimpleClass();
-        RC::controlObject($class1)->setReturn('method', 5);
-        RC::controlObject($class2)->setReturn('method', 6);
-        $this->assertSame(5, $class1->method());
-        $this->assertSame(6, $class2->method());
+        RC::controlObject($class1)->setReturn('method', __FUNCTION__);
+        RC::controlObject($class2)->setReturn('method', __FUNCTION__);
+        $this->assertSame(__FUNCTION__, $class1->method());
+        $this->assertSame(__FUNCTION__, $class2->method());
+        RC::removeControlObject($class1);
+        RC::removeControlObject($class2);
+    }
+
+    /**
+     * Test success create new instances with manifest found by class name.
+     */
+    public function testControlObjectNewInstanceClassName()
+    {
+        $class1 = new SimpleClass();
+        RC::controlNewInstance(self::SIMPLE_CLASS_NAME)->setReturn('method', __FUNCTION__);
+        $class2 = new SimpleClass();
+        $this->assertSame(__FUNCTION__, $class1->method());
+        $this->assertSame(__FUNCTION__, $class2->method());
+        RC::removeControlObject($class1);
+        RC::removeControlObject($class2);
+    }
+
+    /**
+     * Test success create new instances with manifest found by object class name.
+     */
+    public function testControlObjectNewInstanceObject()
+    {
+        $class1 = new SimpleClass();
+        RC::controlNewInstance($class1)->setReturn('method', __FUNCTION__);
+        $class2 = new SimpleClass();
+        $this->assertSame(__FUNCTION__, $class1->method());
+        $this->assertSame(__FUNCTION__, $class2->method());
+        RC::removeControlObject($class1);
+        RC::removeControlObject($class2);
     }
 
     /**
