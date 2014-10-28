@@ -130,6 +130,19 @@ class RemoteControlTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test if method is under control.
+     */
+    public function testIsUnderControlStatic()
+    {
+        $class = new SimpleClass();
+        $this->assertFalse(RC::isUnderControlStatic(self::SIMPLE_CLASS_NAME, 'staticMethod'));
+        $this->assertFalse(RC::isUnderControlStatic($class, 'staticMethod'));
+        RC::controlStatic(self::SIMPLE_CLASS_NAME)->setReturn('staticMethod', 5);
+        $this->assertTrue(RC::isUnderControlStatic(self::SIMPLE_CLASS_NAME, 'staticMethod'));
+        $this->assertTrue(RC::isUnderControlStatic($class, 'staticMethod'));
+    }
+
+    /**
      * @return array
      */
     public function dpControlStaticInvalidArgument()
