@@ -69,7 +69,6 @@ class RemoteControlTest extends \PHPUnit_Framework_TestCase
         $class = new SimpleClass();
         RC::controlStatic($class)->setReturn('staticMethod', 5);
         $this->assertSame(5, SimpleClass::staticMethod());
-        RC::removeControlStatic(self::SIMPLE_CLASS_NAME);
     }
 
     /**
@@ -81,7 +80,6 @@ class RemoteControlTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(5, SimpleClass::staticMethod());
         RC::controlStatic('\\' . self::SIMPLE_CLASS_NAME)->setReturn('staticMethod', 6);
         $this->assertSame(6, SimpleClass::staticMethod());
-        RC::removeControlStatic(self::SIMPLE_CLASS_NAME);
     }
 
     /**
@@ -108,5 +106,14 @@ class RemoteControlTest extends \PHPUnit_Framework_TestCase
     public function testControlStaticInvalidArgument($target)
     {
         RC::controlStatic($target);
+    }
+
+    /**
+     * Cleanup.
+     */
+    protected function tearDown()
+    {
+        RC::removeControlStatic(self::SIMPLE_CLASS_NAME);
+        RC::removeControlNewInstance(self::SIMPLE_CLASS_NAME);
     }
 }

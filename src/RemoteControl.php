@@ -29,29 +29,19 @@ class RemoteControl
     private static $newInstances = [];
 
     /**
-     * @param object|string $target
+     * @param object|string $class
      *
      * @return Manifest
      * @throws \InvalidArgumentException
      */
-    public static function controlStatic($target)
+    public static function controlStatic($class)
     {
-        $class = self::getClassName($target);
+        $class = self::getClassName($class);
         if (empty(self::$classes[$class])) {
             self::$classes[$class] = new Manifest();
         }
 
         return self::$classes[$class];
-    }
-
-    /**
-     * @param object|string $target
-     *
-     * @throws \InvalidArgumentException
-     */
-    public static function removeControlStatic($target)
-    {
-        unset(self::$classes[self::getClassName($target)]);
     }
 
     /**
@@ -70,15 +60,6 @@ class RemoteControl
         } else {
             throw new \InvalidArgumentException('Class ' . $class . ' does not exists.');
         }
-    }
-
-    /**
-     * @param string $class
-     */
-    public static function removeControlNewInstance($class)
-    {
-        $class = ltrim($class, '\\');
-        unset(self::$newInstances[$class]);
     }
 
     /**
@@ -107,22 +88,55 @@ class RemoteControl
     }
 
     /**
+     * @param object|string $class
+     *
+     * @throws \InvalidArgumentException
+     */
+    public static function removeControlStatic($class)
+    {
+        unset(self::$classes[self::getClassName($class)]);
+    }
+
+    /**
+     * @param object|string $class
+     */
+    public static function removeControlNewInstance($class)
+    {
+        unset(self::$newInstances[self::getClassName($class)]);
+    }
+
+    /**
+     * @param object $object
+     *
+     * @throws \InvalidArgumentException
+     */
+    public static function removeControlObject($object)
+    {
+        if (is_object($object)) {
+            $hash = spl_object_hash($object);
+            unset(self::$objects[$hash]);
+        } else {
+            throw new \InvalidArgumentException('Target must be an object.');
+        }
+    }
+
+    /**
      * Test if static method is under control.
      *
-     * @param string $class Class name
+     * @param object|string $class Class name
      * @param string $method Method name
      *
      * @return bool
      */
     public static function isUnderControlStatic($class, $method)
     {
-        $class = ltrim($class, '\\');
+        $class = self::getClassName($class);
 
         return (isset(self::$classes[$class]) and self::$classes[$class]->intercept($method));
     }
 
     /**
-     * @param object|string $object
+     * @param object $object
      * @param string $method
      *
      * @return bool
@@ -139,21 +153,6 @@ class RemoteControl
             } else {
                 return self::$objects[$hash]->intercept($method);
             }
-        } else {
-            throw new \InvalidArgumentException('Target must be an object.');
-        }
-    }
-
-    /**
-     * @param object $object
-     *
-     * @throws \InvalidArgumentException
-     */
-    public static function removeControlObject($object)
-    {
-        if (is_object($object)) {
-            $hash = spl_object_hash($object);
-            unset(self::$objects[$hash]);
         } else {
             throw new \InvalidArgumentException('Target must be an object.');
         }
