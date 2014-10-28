@@ -207,7 +207,9 @@ class Manifest implements \Countable
         $handler = $this->return[$method];
         if (is_callable($handler)) {
             if (is_object($scope)) {
-                $handler = $handler->bindTo($scope, $scope);
+                $handler = \Closure::bind($handler, $scope, get_class($scope));
+            } elseif (is_string($scope)) {
+                $handler = \Closure::bind($handler, null, $scope);
             }
 
             return call_user_func_array($handler, $arguments);
