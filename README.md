@@ -18,18 +18,22 @@
 To add Influence as a local, per-project dependency to your project, simply add a dependency on `komex/influence` to your project's `composer.json` file.
 Here is a minimal example of a `composer.json` file that just defines a develop dependency on Influence:
 
-    {
-        "require-dev": {
-            "komex/influence": "1.0.*"
-        }
+```json
+{
+    "require-dev": {
+        "komex/influence": "1.1.*"
     }
+}
+```
 
 ## Usage
 
 **Influence** must be injected as early as possible. If you are using unit test framework like [unteist](https://github.com/komex/unteist) or [PHPUnit](https://phpunit.de/) the best way to do this is include autoload and influence in bootstrap file.
 
-    require 'vendor/autoload.php';
-    Influence\Influence::affect();
+```php
+require 'vendor/autoload.php';
+Influence\Influence::affect();
+```
 
 Since this moment you are able to mock any objects and static classes. By default, all objects behave as usual. You need to configure behavior of each object or class you need to control.
 
@@ -37,47 +41,55 @@ Since this moment you are able to mock any objects and static classes. By defaul
 
 Let imagine we have a simple class A:
 
-    class A
+```php
+class A
+{
+    public function sum($a)
     {
-         public function sum($a)
-         {
-             return $a + $this->rand(0, $a);
-         }
-         private fuction rand($min, $max)
-         {
-             return rand($min, $max);
-         }
+        return $a + $this->rand(0, $a);
     }
+    private fuction rand($min, $max)
+    {
+        return rand($min, $max);
+    }
+}
+```
 
 #### Custom method behavior.
 
 So, if we create an object of class ```A``` we can invoke only ```sum()``` method and control only ```$a``` and never know result of our operation.
 
-    $a = new A();
-    echo $a->sum(1); // ??
-    echo $a->sum(7); // ??
+```php
+$a = new A();
+echo $a->sum(1); // ??
+echo $a->sum(7); // ??
+````
 
 But with **Influence** you can simply test this code. Just specify the behavior of ```sum()``` like this:
 
-    $a = new A();
-    $manifest = Influence\RemoteControl::control($a);
-    $manifest->setReturn('rand', 1);
-    echo $a->sum(1); // 2
-    echo $a->sum(7); // 8
-    $manifest->setDefault('rand');
-    echo $a->sum(1); // ??
-    echo $a->sum(7); // ??
+```php
+$a = new A();
+$manifest = Influence\RemoteControl::control($a);
+$manifest->setReturn('rand', 1);
+echo $a->sum(1); // 2
+echo $a->sum(7); // 8
+$manifest->setDefault('rand');
+echo $a->sum(1); // ??
+echo $a->sum(7); // ??
+```
 
 #### Log method calls
 
 If you don't need to set custom method behavior, but want to know how many times method was called and with what arguments.
 
-    $a = new A();
-    $manifest = Influence\RemoteControl::control($a);
-    $manifest->registerCalls(true);
-    echo $a->sum(1); // ??
-    echo $a->sum(7); // ??
-    var_dump($manifest->getCalls('rand')); // [ [0, 1], [0, 7] ]
+```php
+$a = new A();
+$manifest = Influence\RemoteControl::control($a);
+$manifest->registerCalls(true);
+echo $a->sum(1); // ??
+echo $a->sum(7); // ??
+var_dump($manifest->getCalls('rand')); // [ [0, 1], [0, 7] ]
+```
 
 ## License
 
