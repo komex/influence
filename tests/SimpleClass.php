@@ -16,6 +16,11 @@ namespace Test\Influence;
 class SimpleClass
 {
     /**
+     * @var int
+     */
+    private $a = 3;
+
+    /**
      * Simple method.
      *
      * @return string
