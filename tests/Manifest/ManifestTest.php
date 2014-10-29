@@ -8,7 +8,6 @@
 namespace Test\Influence\Manifest;
 
 use Influence\Manifest\Manifest;
-use Test\Influence\SimpleClass;
 
 /**
  * Class ManifestTest
@@ -19,191 +18,52 @@ use Test\Influence\SimpleClass;
 class ManifestTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Test successful check intercept mode.
+     * Test no methods by default.
      */
-    public function testIntercept()
+    public function testNoMethodsByDefault()
     {
-        $manifest = new Manifest();
-        $this->assertFalse($manifest->intercept('method1'));
-        $this->assertFalse($manifest->intercept('method2'));
-
-        $manifest->setReturn('method1', 41);
-
-        $this->assertTrue($manifest->intercept('method1'));
-        $this->assertFalse($manifest->intercept('method2'));
-
-        $manifest->setReturn('method2', false);
-        $this->assertTrue($manifest->intercept('method2'));
+        $this->assertCount(0, new Manifest());
     }
 
     /**
-     * Test disabled calls registration.
+     * Test create method manifest only once for each method.
      */
-    public function testDisabledCallsRegister()
+    public function testGetMethod()
     {
         $manifest = new Manifest();
-        $this->assertInternalType('array', $manifest->getAllCalls());
-        $this->assertCount(0, $manifest);
-
-        $manifest->registerCall('method', []);
-        $this->assertCount(0, $manifest);
-
-        $manifest->registerCalls(false);
-        $manifest->registerCall('method2', ['args' => 4]);
-        $this->assertCount(0, $manifest);
+        for ($i = 0; $i < 3; $i++) {
+            $this->assertInstanceOf('Influence\\Manifest\\MethodManifest', $manifest->get('method1'));
+            $this->assertCount(1, $manifest);
+        }
+        for ($i = 0; $i < 3; $i++) {
+            $this->assertInstanceOf('Influence\\Manifest\\MethodManifest', $manifest->get('method2'));
+            $this->assertCount(2, $manifest);
+        }
     }
 
     /**
-     * Test calls registration works fine.
+     * Test check method exists.
      */
-    public function testRegisterCall()
+    public function testHasMethod()
     {
         $manifest = new Manifest();
-        $manifest->registerCalls(true);
-        $manifest->registerCall('method', []);
-        $manifest->registerCall('method2', ['args' => true]);
-        $this->assertSame([['method', []], ['method2', ['args' => true]]], $manifest->getAllCalls());
-
-        $manifest->registerCalls(false);
-        $manifest->registerCall('method3', []);
-        $this->assertSame([['method', []], ['method2', ['args' => true]]], $manifest->getAllCalls());
+        $this->assertFalse($manifest->has('method1'));
+        $this->assertFalse($manifest->has('method2'));
+        $manifest->get('method1');
+        $this->assertTrue($manifest->has('method1'));
+        $this->assertFalse($manifest->has('method2'));
     }
 
     /**
-     * Test filtering methods calls.
+     * Test remove method from manifest.
      */
-    public function testGetMethodCalls()
+    public function testRemoveMethod()
     {
         $manifest = new Manifest();
-        $manifest->registerCalls(true);
-        $manifest->registerCall('method', []);
-        $manifest->registerCall('method2', ['args' => true]);
-        $manifest->registerCall('method3', []);
-        $manifest->registerCall('method', ['abc' => 4]);
-
-        $this->assertSame(2, $manifest->getCallsCount('method'));
-        $this->assertSame(1, $manifest->getCallsCount('method2'));
-        $this->assertSame([[], ['abc' => 4]], $manifest->getCalls('method'));
-        $this->assertSame([['args' => true]], $manifest->getCalls('method2'));
-    }
-
-    /**
-     * Test we can clear methods calls.
-     */
-    public function testClearAllRegisteredCalls()
-    {
-        $manifest = new Manifest();
-        $manifest->registerCalls(true);
-        $manifest->registerCall('method', []);
-        $this->assertNotEmpty($manifest->getAllCalls());
-        $manifest->clearAllCalls();
-        $this->assertEmpty($manifest->getAllCalls());
-    }
-
-    /**
-     * Test we can clear specified method calls.
-     */
-    public function testClearMethodCalls()
-    {
-        $manifest = new Manifest();
-        $manifest->registerCalls(true);
-        $manifest->registerCall('method', ['a' => 'method']);
-        $manifest->registerCall('method2', ['a' => 'method2']);
-
-        $manifest->clearCalls('method');
-        $this->assertSame(0, $manifest->getCallsCount('method'));
-        $this->assertSame(1, $manifest->getCallsCount('method2'));
-    }
-
-    /**
-     * Test working with unexpected method call.
-     */
-    public function testCallUnexpectedMethod()
-    {
-        $manifest = new Manifest();
-        $this->assertNull($manifest->call('method', ['arg' => true]));
-    }
-
-    /**
-     * @return array
-     */
-    public function dpCallAndReturnScalarResult()
-    {
-        return [
-            [9],
-            [null],
-            [true],
-            [false],
-            ['string'],
-            [['a', 'r', 'r', 'a', 'y']],
-            [new \stdClass()],
-        ];
-    }
-
-    /**
-     * @param mixed $value
-     *
-     * @dataProvider dpCallAndReturnScalarResult
-     */
-    public function testCallAndReturnScalarResult($value)
-    {
-        $manifest = new Manifest();
-        $manifest->setReturn('method', $value);
-        $this->assertSame($value, $manifest->call('method', ['some' => 'arguments']));
-    }
-
-    /**
-     * Test return to default method behavior.
-     */
-    public function testDefaultReturn()
-    {
-        $manifest = new Manifest();
-        $manifest->setReturn('method', 5);
-        $manifest->setReturn('method2', 6);
-        $this->assertTrue($manifest->intercept('method'));
-        $this->assertTrue($manifest->intercept('method2'));
-        $manifest->setDefault('method');
-        $this->assertFalse($manifest->intercept('method'));
-        $this->assertTrue($manifest->intercept('method2'));
-    }
-
-    /**
-     * Test call with simple Closure.
-     */
-    public function testCallWithClosure()
-    {
-        $manifest = new Manifest();
-        $manifest->setReturn(
-            'method',
-            function ($a, $b) {
-                return $a + $b;
-            }
-        );
-        $this->assertSame(7, $manifest->call('method', [3, 4]));
-    }
-
-    /**
-     * Test call with closure with scope.
-     */
-    public function testCallWithScopeClosure()
-    {
-        $manifest = new Manifest();
-        $object = new SimpleClass();
-        $manifest->setReturn(
-            'method',
-            function ($a, $b) {
-                $this->a = 5;
-
-                return $a + $b + $this->a;
-            }
-        );
-        $this->assertSame(12, $manifest->call('method', [3, 4], $object));
-        $manifest->setReturn(
-            'method',
-            function () {
-                return $this->a;
-            }
-        );
-        $this->assertSame(5, $manifest->call('method', [], $object));
+        $manifest->get('method1');
+        $manifest->get('method2');
+        $manifest->remove('method1');
+        $this->assertFalse($manifest->has('method1'));
+        $this->assertTrue($manifest->has('method2'));
     }
 }
