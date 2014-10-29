@@ -39,4 +39,12 @@ class SimpleClass
     {
         return __METHOD__;
     }
+
+    /**
+     * @return int
+     */
+    public function getA()
+    {
+        return $this->a;
+    }
 }

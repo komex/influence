@@ -8,6 +8,7 @@
 namespace Test\Influence\Manifest;
 
 use Influence\Manifest\MethodManifest;
+use Test\Influence\SimpleClass;
 
 /**
  * Class MethodManifestTest
@@ -105,5 +106,38 @@ class MethodManifestTest extends \PHPUnit_Framework_TestCase
         $manifest->setValue($data);
         $this->assertTrue($manifest->hasValue());
         $this->assertSame($data, $manifest->getValue([], null));
+    }
+
+    /**
+     * Test getValue with closure.
+     */
+    public function testGetValueClosure()
+    {
+        $manifest = new MethodManifest();
+        $manifest->setValue(
+            function ($a, $b) {
+                return 1 + $a + $b;
+            }
+        );
+        $this->assertTrue($manifest->hasValue());
+        $this->assertSame(6, $manifest->getValue([2, 3], null));
+    }
+
+    /**
+     * Test getValue with scoped closure.
+     */
+    public function testGetValueClosureWithScope()
+    {
+        $class = new SimpleClass();
+        $manifest = new MethodManifest();
+        $manifest->setValue(
+            function ($a, $b) {
+                $this->a = 4;
+
+                return $this->a + $a + $b;
+            }
+        );
+        $this->assertSame(9, $manifest->getValue([2, 3], $class));
+        $this->assertSame(4, $class->getA());
     }
 }
