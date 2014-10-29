@@ -83,19 +83,23 @@ class MethodMode extends AbstractMode
      */
     private function getCode($isStatic)
     {
-        $target = $isStatic ? 'get_called_class()' : '$this';
-        $scope = $isStatic ? '__CLASS__' : '$this';
-        $type = $isStatic ? 'Static' : 'Object';
-        $isUnderControl = sprintf('\\Influence\\RemoteControl::isUnderControl%s(%s, __FUNCTION__)', $type, $target);
-        $control = sprintf('\\Influence\\RemoteControl::control%s(%s)', $type, $target);
+        static $namespace = '\\Influence\\RemoteControl::';
+        if ($isStatic) {
+            $hasMethod = $namespace . 'hasStatic(get_called_class(), __FUNCTION__)';
+            $getMethod = $namespace . 'getStatic(get_called_class())';
+            $scope = '__CLASS__';
+        } else {
+            $hasMethod = $namespace . 'hasObject($this, __FUNCTION__)';
+            $getMethod = $namespace . 'getObject($this)';
+            $scope = '$this';
+        }
         $manifest = uniqid('$manifest_');
 
         $code = <<<EOL
-if (${isUnderControl}) {
-    ${manifest} = ${control};
-    ${manifest}->registerCall(__FUNCTION__, func_get_args());
-    if (${manifest}->intercept(__FUNCTION__)) {
-        return ${manifest}->call(__FUNCTION__, func_get_args(), $scope);
+if (${hasMethod}) {
+    ${manifest} = ${getMethod}->get(__FUNCTION__);
+    if (${manifest}->log(func_get_args())->hasValue()) {
+        return ${manifest}->getValue(func_get_args(), $scope);
     }
 }
 EOL;
