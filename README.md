@@ -71,11 +71,11 @@ But with **Influence** you can simply test this code. Just specify the behavior 
 
 ```php
 $a = new A();
-$manifest = Influence\RemoteControl::control($a);
-$manifest->setReturn('rand', 1);
+$method = Influence\RemoteControl::controlObject($a)->get('rand');
+$method->setValue(1);
 echo $a->sum(1); // 2
 echo $a->sum(7); // 8
-$manifest->setDefault('rand');
+$method->useDefaultValue();
 echo $a->sum(1); // ??
 echo $a->sum(7); // ??
 ```
@@ -86,11 +86,11 @@ If you don't need to set custom method behavior, but want to know how many times
 
 ```php
 $a = new A();
-$manifest = Influence\RemoteControl::control($a);
-$manifest->registerCalls(true);
+$method = Influence\RemoteControl::controlObject($a)->get('rand');
+$method->setLog(true);
 echo $a->sum(1); // ??
 echo $a->sum(7); // ??
-var_dump($manifest->getCalls('rand')); // [ [0, 1], [0, 7] ]
+var_dump($method->getLogs()); // [ [0, 1], [0, 7] ]
 ```
 
 ## License
