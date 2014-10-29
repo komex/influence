@@ -94,7 +94,7 @@ class RemoteControlTest extends \PHPUnit_Framework_TestCase
     public function testControlStaticObject()
     {
         $class = new SimpleClass();
-        RC::getStatic($class)->setReturn('staticMethod', __FUNCTION__);
+        RC::getStatic($class)->get('staticMethod')->setValue(__FUNCTION__);
         $this->assertSame(__FUNCTION__, SimpleClass::staticMethod());
     }
 
@@ -103,9 +103,9 @@ class RemoteControlTest extends \PHPUnit_Framework_TestCase
      */
     public function testControlStaticClassName()
     {
-        RC::getStatic(self::SIMPLE_CLASS_NAME)->setReturn('staticMethod', __CLASS__);
+        RC::getStatic(self::SIMPLE_CLASS_NAME)->get('staticMethod')->setValue(__CLASS__);
         $this->assertSame(__CLASS__, SimpleClass::staticMethod());
-        RC::getStatic('\\' . self::SIMPLE_CLASS_NAME)->setReturn('staticMethod', __FUNCTION__);
+        RC::getStatic('\\' . self::SIMPLE_CLASS_NAME)->get('staticMethod')->setValue(__FUNCTION__);
         $this->assertSame(__FUNCTION__, SimpleClass::staticMethod());
     }
 
@@ -114,7 +114,7 @@ class RemoteControlTest extends \PHPUnit_Framework_TestCase
      */
     public function testRemoveControlStaticClassName()
     {
-        RC::getStatic(self::SIMPLE_CLASS_NAME)->setReturn('staticMethod', __FUNCTION__);
+        RC::getStatic(self::SIMPLE_CLASS_NAME)->get('staticMethod')->setValue(__FUNCTION__);
         RC::removeStatic(self::SIMPLE_CLASS_NAME);
         $this->assertFalse(RC::hasStatic(self::SIMPLE_CLASS_NAME, 'staticMethod'));
     }
@@ -124,7 +124,7 @@ class RemoteControlTest extends \PHPUnit_Framework_TestCase
      */
     public function testRemoveControlStaticObject()
     {
-        RC::getStatic(self::SIMPLE_CLASS_NAME)->setReturn('staticMethod', __FUNCTION__);
+        RC::getStatic(self::SIMPLE_CLASS_NAME)->get('staticMethod')->setValue(__FUNCTION__);
         RC::removeStatic(new SimpleClass());
         $this->assertFalse(RC::hasStatic(self::SIMPLE_CLASS_NAME, 'staticMethod'));
     }
@@ -137,7 +137,7 @@ class RemoteControlTest extends \PHPUnit_Framework_TestCase
         $class = new SimpleClass();
         $this->assertFalse(RC::hasStatic(self::SIMPLE_CLASS_NAME, 'staticMethod'));
         $this->assertFalse(RC::hasStatic($class, 'staticMethod'));
-        RC::getStatic(self::SIMPLE_CLASS_NAME)->setReturn('staticMethod', __FUNCTION__);
+        RC::getStatic(self::SIMPLE_CLASS_NAME)->get('staticMethod')->setValue(__FUNCTION__);
         $this->assertTrue(RC::hasStatic(self::SIMPLE_CLASS_NAME, 'staticMethod'));
         $this->assertTrue(RC::hasStatic($class, 'staticMethod'));
     }
@@ -175,8 +175,8 @@ class RemoteControlTest extends \PHPUnit_Framework_TestCase
     {
         $class1 = new SimpleClass();
         $class2 = new SimpleClass();
-        RC::getObject($class1)->setReturn('method', __FUNCTION__);
-        RC::getObject($class2)->setReturn('method', __FUNCTION__);
+        RC::getObject($class1)->get('method')->setValue(__FUNCTION__);
+        RC::getObject($class2)->get('method')->setValue(__FUNCTION__);
         $this->assertSame(__FUNCTION__, $class1->method());
         $this->assertSame(__FUNCTION__, $class2->method());
         RC::removeObject($class1);
@@ -189,7 +189,7 @@ class RemoteControlTest extends \PHPUnit_Framework_TestCase
     public function testControlObjectNewInstanceClassName()
     {
         $class1 = new SimpleClass();
-        RC::getNewInstance(self::SIMPLE_CLASS_NAME)->setReturn('method', __FUNCTION__);
+        RC::getNewInstance(self::SIMPLE_CLASS_NAME)->get('method')->setValue(__FUNCTION__);
         $class2 = new SimpleClass();
         $this->assertSame(__FUNCTION__, $class1->method());
         $this->assertSame(__FUNCTION__, $class2->method());
@@ -203,7 +203,7 @@ class RemoteControlTest extends \PHPUnit_Framework_TestCase
     public function testControlObjectNewInstanceObject()
     {
         $class1 = new SimpleClass();
-        RC::getNewInstance($class1)->setReturn('method', __FUNCTION__);
+        RC::getNewInstance($class1)->get('method')->setValue(__FUNCTION__);
         $class2 = new SimpleClass();
         $this->assertSame(__FUNCTION__, $class1->method());
         $this->assertSame(__FUNCTION__, $class2->method());
@@ -218,8 +218,8 @@ class RemoteControlTest extends \PHPUnit_Framework_TestCase
     {
         $class1 = new SimpleClass();
         $class2 = new SimpleClass();
-        RC::getObject($class1)->setReturn('method', __FUNCTION__);
-        RC::getObject($class2)->setReturn('method', __FUNCTION__);
+        RC::getObject($class1)->get('method')->setValue(__FUNCTION__);
+        RC::getObject($class2)->get('method')->setValue(__FUNCTION__);
         RC::removeObject($class1);
         $this->assertSame(self::SIMPLE_CLASS_NAME . '::method', $class1->method());
         $this->assertSame(__FUNCTION__, $class2->method());
@@ -232,7 +232,7 @@ class RemoteControlTest extends \PHPUnit_Framework_TestCase
     public function testRemoveControlNewInstanceBeforeClone()
     {
         $class = new SimpleClass();
-        RC::getNewInstance(self::SIMPLE_CLASS_NAME)->setReturn('method', __FUNCTION__);
+        RC::getNewInstance(self::SIMPLE_CLASS_NAME)->get('method')->setValue(__FUNCTION__);
         RC::removeNewInstance($class);
         $this->assertSame(self::SIMPLE_CLASS_NAME . '::method', $class->method());
     }
@@ -244,7 +244,7 @@ class RemoteControlTest extends \PHPUnit_Framework_TestCase
     {
         $class1 = new SimpleClass();
         $class2 = new SimpleClass();
-        RC::getNewInstance(self::SIMPLE_CLASS_NAME)->setReturn('method', __FUNCTION__);
+        RC::getNewInstance(self::SIMPLE_CLASS_NAME)->get('method')->setValue(__FUNCTION__);
         $this->assertSame(__FUNCTION__, $class1->method());
         RC::removeNewInstance(self::SIMPLE_CLASS_NAME);
         $this->assertSame(self::SIMPLE_CLASS_NAME . '::method', $class2->method());
