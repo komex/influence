@@ -105,7 +105,7 @@ class MethodManifest
      */
     public function hasValue()
     {
-        return $this->useDefaultValue;
+        return !$this->useDefaultValue;
     }
 
     /**

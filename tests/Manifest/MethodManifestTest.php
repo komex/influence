@@ -64,6 +64,17 @@ class MethodManifestTest extends \PHPUnit_Framework_TestCase
         $manifest->log([1]);
         $manifest->log(['a']);
         $manifest->clearLogs();
-        $this->assertEmpty($manifest->getLogs());
+        $logs = $manifest->getLogs();
+        $this->assertInternalType('array', $logs);
+        $this->assertEmpty($logs);
+    }
+
+    /**
+     * Test no custom value by default.
+     */
+    public function testDefaultValue()
+    {
+        $manifest = new MethodManifest();
+        $this->assertFalse($manifest->hasValue());
     }
 }
