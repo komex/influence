@@ -77,4 +77,33 @@ class MethodManifestTest extends \PHPUnit_Framework_TestCase
         $manifest = new MethodManifest();
         $this->assertFalse($manifest->hasValue());
     }
+
+    /**
+     * @return array
+     */
+    public function dpGetValueScalar()
+    {
+        return [
+            [9],
+            [null],
+            [true],
+            [false],
+            ['string'],
+            [['a', 'r', 'r', 'a', 'y']],
+            [new \stdClass()],
+        ];
+    }
+
+    /**
+     * Test getValue with scalar data.
+     *
+     * @dataProvider dpGetValueScalar
+     */
+    public function testGetValueScalar($data)
+    {
+        $manifest = new MethodManifest();
+        $manifest->setValue($data);
+        $this->assertTrue($manifest->hasValue());
+        $this->assertSame($data, $manifest->getValue([], null));
+    }
 }
