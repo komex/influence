@@ -7,6 +7,7 @@
 
 namespace Influence\Transformer\Mode;
 
+use Influence\Transformer\MetaInfo\AbstractMetaInfo;
 use Influence\Transformer\Transformer;
 
 /**
@@ -26,11 +27,23 @@ class FileMode extends AbstractMode
     public function transform($code, $value)
     {
         switch ($code) {
+            case T_USE:
+                $this->transformer->setMode(Transformer::MODE_USE);
+                break;
+            case T_NAMESPACE:
+                $this->transformer->setMode(Transformer::MODE_NAMESPACE);
+                break;
+            case T_ABSTRACT:
+                $this->transformer->getClassMetaInfo()->setAttribute(AbstractMetaInfo::MODE_ABSTRACT);
+                break;
+            case T_FINAL:
+                $this->transformer->getClassMetaInfo()->setAttribute(AbstractMetaInfo::MODE_FINAL);
+                break;
             case T_CLASS:
-                $this->transformer->setMode(Transformer::MODE_CLASS)->reset();
+                $this->transformer->setMode(Transformer::MODE_CLASS);
                 break;
             case T_TRAIT:
-                $this->transformer->setMode(Transformer::MODE_AS_IS)->reset();
+                $this->transformer->setMode(Transformer::MODE_AS_IS);
                 break;
         }
         return $value;

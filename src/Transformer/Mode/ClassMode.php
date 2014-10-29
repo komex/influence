@@ -25,8 +25,14 @@ class ClassMode extends AbstractMode
      */
     public function transform($code, $value)
     {
-        if ($value === '{') {
-            $this->transformer->setMode(Transformer::MODE_CLASS_BODY)->reset();
+        if ($code === T_STRING) {
+            $this->transformer->getClassMetaInfo()->setName($value);
+        } elseif ($code === T_EXTENDS) {
+            $this->transformer->setMode(Transformer::MODE_EXTENDS);
+        } elseif ($code === T_IMPLEMENTS) {
+
+        } elseif ($value === '{') {
+            $this->transformer->setMode(Transformer::MODE_CLASS_BODY);
         }
 
         return $value;
