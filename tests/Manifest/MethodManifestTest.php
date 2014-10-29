@@ -140,4 +140,28 @@ class MethodManifestTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(9, $manifest->getValue([2, 3], $class));
         $this->assertSame(4, $class->getA());
     }
+
+    /**
+     * Test reset method intercept with reset custom value in manifest.
+     */
+    public function testUseDefaultValueReset()
+    {
+        $manifest = new MethodManifest();
+        $manifest->setValue(5);
+        $manifest->useDefaultValue();
+        $this->assertFalse($manifest->hasValue());
+        $this->assertNull($manifest->getValue([], null));
+    }
+
+    /**
+     * Test reset method intercept without reset custom value in manifest.
+     */
+    public function testUseDefaultValueKeep()
+    {
+        $manifest = new MethodManifest();
+        $manifest->setValue(5);
+        $manifest->useDefaultValue(false);
+        $this->assertFalse($manifest->hasValue());
+        $this->assertSame(5, $manifest->getValue([], null));
+    }
 }
