@@ -23,6 +23,10 @@ class MethodMetaInfo extends AbstractMetaInfo
      * @var bool
      */
     private $isStatic = false;
+    /**
+     * @var bool
+     */
+    private $isConstructor = false;
 
     /**
      * @return int
@@ -58,5 +62,25 @@ class MethodMetaInfo extends AbstractMetaInfo
     public function setIsStatic($isStatic)
     {
         $this->isStatic = (bool)$isStatic;
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return $this
+     */
+    public function setName($name)
+    {
+        $this->isConstructor = strtolower($name) === '__construct';
+
+        return parent::setName($name);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isConstructor()
+    {
+        return $this->isConstructor;
     }
 }

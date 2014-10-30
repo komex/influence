@@ -7,32 +7,21 @@
 
 namespace Influence\Transformer\Mode;
 
+use Influence\Transformer\MetaInfo\MethodMetaInfo;
 use Influence\Transformer\Transformer;
 
 /**
- * Class MethodMode
+ * Class MethodBodyMode
  *
  * @package Influence\Transformer\Mode
  * @author Andrey Kolchenko <andrey@kolchenko.me>
  */
-class MethodMode extends AbstractMode
+class MethodBodyMode extends AbstractMode
 {
-    /**
-     * @var bool
-     */
-    private $static;
     /**
      * @var int
      */
     private $level = 0;
-    /**
-     * @var bool
-     */
-    private $expectMethodName = true;
-    /**
-     * @var string
-     */
-    private $methodName;
 
     /**
      * @param int|null $code
@@ -42,57 +31,45 @@ class MethodMode extends AbstractMode
      */
     public function transform($code, $value)
     {
-        if ($this->expectMethodName) {
-            if ($code === T_STRING) {
-                $this->methodName = $value;
-                $this->expectMethodName = false;
-            }
-        } else {
-            if ($value === '{') {
+        switch ($value) {
+            case '{':
                 if ($this->level === 0) {
-                    $static = ($this->static or $this->methodName === '__construct');
-                    $value .= $this->getCode($static);
+                    $value .= $this->getCode($this->transformer->getClassMetaInfo()->currentMethod());
                 }
                 $this->level++;
-            } elseif ($value === '}') {
+                break;
+            case '}':
                 $this->level--;
                 if ($this->level === 0) {
-                    $this->transformer->setMode(Transformer::MODE_CLASS_BODY)->reset();
+                    $this->transformer->setMode(Transformer::MODE_CLASS_BODY);
                 }
-            }
+                break;
+            case ';':
+                if ($this->transformer->getClassMetaInfo()->currentMethod()->getAttribute() === T_ABSTRACT) {
+                    $this->transformer->setMode(Transformer::MODE_CLASS_BODY);
+                }
+                break;
         }
 
         return $value;
     }
 
     /**
-     * @param bool $defaultValue
-     */
-    public function reset($defaultValue = null)
-    {
-        $this->static = !!$defaultValue;
-        $this->level = 0;
-        $this->expectMethodName = true;
-        $this->methodName = null;
-    }
-
-    /**
-     * @param bool $isStatic
+     * @param MethodMetaInfo $metaInfo
      *
      * @return string
      */
-    private function getCode($isStatic)
+    private function getCode(MethodMetaInfo $metaInfo)
     {
         static $namespace = '\\Influence\\RemoteControl::';
-        if ($isStatic) {
+        if ($metaInfo->getIsStatic() or $metaInfo->isConstructor()) {
             $hasMethod = $namespace . 'hasStatic(get_called_class(), __FUNCTION__)';
             $getMethod = $namespace . 'getStatic(get_called_class())';
-            $scope = '__CLASS__';
         } else {
             $hasMethod = $namespace . 'hasObject($this, __FUNCTION__)';
             $getMethod = $namespace . 'getObject($this)';
-            $scope = '$this';
         }
+        $scope = (($metaInfo->getIsStatic()) ? '__CLASS__' : '$this');
         $manifest = uniqid('$manifest_');
 
         $code = <<<EOL

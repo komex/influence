@@ -15,7 +15,8 @@ use Influence\Transformer\Mode\ClassMode;
 use Influence\Transformer\Mode\ExtendsMode;
 use Influence\Transformer\Mode\FileMode;
 use Influence\Transformer\Mode\ImplementsMode;
-use Influence\Transformer\Mode\MethodMode;
+use Influence\Transformer\Mode\MethodHeadMode;
+use Influence\Transformer\Mode\MethodBodyMode;
 use Influence\Transformer\Mode\NamespaceMode;
 use Influence\Transformer\Mode\UseMode;
 
@@ -56,13 +57,17 @@ class Transformer
      */
     const MODE_CLASS_BODY = 7;
     /**
-     * Parse method
+     * Parse method head
      */
-    const MODE_METHOD = 8;
+    const MODE_METHOD_HEAD = 8;
+    /**
+     * Parse method body
+     */
+    const MODE_METHOD_BODY = 9;
     /**
      * Do nothing
      */
-    const MODE_AS_IS = 9;
+    const MODE_AS_IS = 10;
     /**
      * @var int
      */
@@ -88,7 +93,8 @@ class Transformer
         $this->registerMode(self::MODE_EXTENDS, new ExtendsMode());
         $this->registerMode(self::MODE_IMPLEMENTS, new ImplementsMode());
         $this->registerMode(self::MODE_CLASS_BODY, new ClassBodyMode());
-        $this->registerMode(self::MODE_METHOD, new MethodMode());
+        $this->registerMode(self::MODE_METHOD_HEAD, new MethodHeadMode());
+        $this->registerMode(self::MODE_METHOD_BODY, new MethodBodyMode());
         $this->registerMode(self::MODE_AS_IS, new AsIsMode());
     }
 
@@ -121,9 +127,6 @@ class Transformer
     public function setClassMetaInfo(ClassMetaInfo $classMetaInfo)
     {
         $this->classMetaInfo = $classMetaInfo;
-        foreach ($this->modes as $mode) {
-            $mode->reset();
-        }
         $this->setMode(self::MODE_FILE);
     }
 
