@@ -57,6 +57,14 @@ class ClassMetaInfo extends AbstractMetaInfo
     }
 
     /**
+     * @return MethodMetaInfo
+     */
+    public function currentMethod()
+    {
+        return current(array_slice($this->methods, -1, 1));
+    }
+
+    /**
      * @return string
      */
     public function getExtends()
