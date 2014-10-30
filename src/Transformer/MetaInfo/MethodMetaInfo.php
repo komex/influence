@@ -16,21 +16,21 @@ namespace Influence\Transformer\MetaInfo;
 class MethodMetaInfo extends AbstractMetaInfo
 {
     /**
-     * Method is public
-     */
-    const VISIBILITY_PUBLIC = 0;
-    /**
-     * Method is protected
-     */
-    const VISIBILITY_PROTECTED = 1;
-    /**
-     * Method is private
-     */
-    const VISIBILITY_PRIVATE = 2;
-    /**
      * @var int
      */
-    private $visibility = self::VISIBILITY_PUBLIC;
+    private $visibility = T_PUBLIC;
+    /**
+     * @var bool
+     */
+    private $isStatic = false;
+
+    /**
+     * @return int
+     */
+    public function getVisibility()
+    {
+        return $this->visibility;
+    }
 
     /**
      * @param int $visibility
@@ -45,10 +45,18 @@ class MethodMetaInfo extends AbstractMetaInfo
     }
 
     /**
-     * @return int
+     * @return boolean
      */
-    public function getVisibility()
+    public function getIsStatic()
     {
-        return $this->visibility;
+        return $this->isStatic;
+    }
+
+    /**
+     * @param boolean $isStatic
+     */
+    public function setIsStatic($isStatic)
+    {
+        $this->isStatic = (bool)$isStatic;
     }
 }

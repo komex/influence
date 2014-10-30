@@ -86,6 +86,6 @@ class MethodModeTest extends \PHPUnit_Framework_TestCase
             self::$transformer = new Transformer();
         }
 
-        return self::$transformer->setMode(Transformer::MODE_METHOD);
+        return self::$transformer->setMode(Transformer::MODE_METHOD_HEAD);
     }
 }

@@ -7,7 +7,6 @@
 
 namespace Influence\Transformer\Mode;
 
-use Influence\Transformer\MetaInfo\AbstractMetaInfo;
 use Influence\Transformer\Transformer;
 
 /**
@@ -34,10 +33,8 @@ class FileMode extends AbstractMode
                 $this->transformer->setMode(Transformer::MODE_NAMESPACE);
                 break;
             case T_ABSTRACT:
-                $this->transformer->getClassMetaInfo()->setAttribute(AbstractMetaInfo::MODE_ABSTRACT);
-                break;
             case T_FINAL:
-                $this->transformer->getClassMetaInfo()->setAttribute(AbstractMetaInfo::MODE_FINAL);
+                $this->transformer->getClassMetaInfo()->setAttribute($code);
                 break;
             case T_CLASS:
                 $this->transformer->setMode(Transformer::MODE_CLASS);

@@ -20,14 +20,6 @@ abstract class AbstractMetaInfo
      */
     const MODE_NORMAL = 0;
     /**
-     * Target is abstract
-     */
-    const MODE_ABSTRACT = 0;
-    /**
-     * Target is final
-     */
-    const MODE_FINAL = 1;
-    /**
      * @var string
      */
     private $name;
