@@ -99,6 +99,14 @@ class Transformer
     }
 
     /**
+     * @return int
+     */
+    public function getMode()
+    {
+        return $this->mode;
+    }
+
+    /**
      * @param int $mode
      *
      * @return $this
@@ -122,20 +130,24 @@ class Transformer
     }
 
     /**
-     * @param ClassMetaInfo $classMetaInfo
-     */
-    public function setClassMetaInfo(ClassMetaInfo $classMetaInfo)
-    {
-        $this->classMetaInfo = $classMetaInfo;
-        $this->setMode(self::MODE_FILE);
-    }
-
-    /**
      * @return ClassMetaInfo
      */
     public function getClassMetaInfo()
     {
         return $this->classMetaInfo;
+    }
+
+    /**
+     * @param ClassMetaInfo $classMetaInfo
+     *
+     * @return $this
+     */
+    public function setClassMetaInfo(ClassMetaInfo $classMetaInfo)
+    {
+        $this->classMetaInfo = $classMetaInfo;
+        $this->setMode(self::MODE_FILE);
+
+        return $this;
     }
 
     /**
