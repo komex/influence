@@ -39,6 +39,7 @@ class FileMode extends AbstractMode
             case T_CLASS:
                 $this->transformer->setMode(Transformer::MODE_CLASS);
                 break;
+            case T_INTERFACE:
             case T_TRAIT:
                 $this->transformer->setMode(Transformer::MODE_AS_IS);
                 break;

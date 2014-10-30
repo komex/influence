@@ -28,7 +28,7 @@ class MethodHeadModeTest extends TransformTestCase
         return [
             ['method($a, \stdClass $obj = null, $array = []) {', 'method'],
             ['__construct() {}', '__construct'],
-            ['SomeMethodName( )', 'SomeMethodName'],
+            ['SomeMethodName ( )', 'SomeMethodName'],
             ['__call() { $a = 1; }', '__call'],
         ];
     }
