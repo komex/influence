@@ -16,17 +16,13 @@ namespace Influence\Transformer\MetaInfo;
 abstract class AbstractMetaInfo
 {
     /**
-     * Target has no attributes
-     */
-    const MODE_NORMAL = 0;
-    /**
      * @var string
      */
     private $name;
     /**
-     * @var int
+     * @var int|null
      */
-    private $attribute = self::MODE_NORMAL;
+    private $attribute;
 
     /**
      * @return string
@@ -49,7 +45,7 @@ abstract class AbstractMetaInfo
     }
 
     /**
-     * @return int
+     * @return int|null
      */
     public function getAttribute()
     {
@@ -57,7 +53,7 @@ abstract class AbstractMetaInfo
     }
 
     /**
-     * @param int $attribute
+     * @param int|null $attribute
      */
     public function setAttribute($attribute)
     {

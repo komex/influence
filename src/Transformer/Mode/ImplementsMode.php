@@ -49,7 +49,8 @@ class ImplementsMode extends AbstractMode
             $this->getTransformer()->getClassMetaInfo()->addImplements(ltrim($this->class, '\\'));
             $this->class = '';
             $this->starts = false;
-        } elseif ($value === '{') {
+        }
+        if ($value === '{') {
             $this->getTransformer()->setMode(Transformer::MODE_CLASS_BODY);
         }
 

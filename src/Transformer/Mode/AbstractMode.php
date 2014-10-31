@@ -8,6 +8,7 @@
 namespace Influence\Transformer\Mode;
 
 use Influence\Transformer\Transformer;
+use Influence\Transformer\TransformInterface;
 
 /**
  * Class AbstractMode
@@ -15,7 +16,7 @@ use Influence\Transformer\Transformer;
  * @package Influence\Transformer\Mode
  * @author Andrey Kolchenko <andrey@kolchenko.me>
  */
-abstract class AbstractMode
+abstract class AbstractMode implements TransformInterface
 {
     /**
      * @var Transformer
@@ -26,14 +27,6 @@ abstract class AbstractMode
      * @return int
      */
     abstract public function getCode();
-
-    /**
-     * @param int|null $code
-     * @param string $value
-     *
-     * @return string
-     */
-    abstract public function transform($code, $value);
 
     /**
      * @return Transformer

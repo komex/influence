@@ -26,7 +26,7 @@ use Influence\Transformer\Mode\UseMode;
  * @package Influence\Transformer
  * @author Andrey Kolchenko <andrey@kolchenko.me>
  */
-class Transformer
+class Transformer implements TransformInterface
 {
     /**
      * Do nothing

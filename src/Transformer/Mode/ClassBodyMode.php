@@ -25,7 +25,7 @@ class ClassBodyMode extends AbstractMode
     /**
      * @var int
      */
-    private $attribute = MethodMetaInfo::MODE_NORMAL;
+    private $attribute;
     /**
      * @var bool
      */
@@ -87,7 +87,7 @@ class ClassBodyMode extends AbstractMode
     private function reset()
     {
         $this->visibility = T_PUBLIC;
-        $this->attribute = MethodMetaInfo::MODE_NORMAL;
+        $this->attribute = null;
         $this->static = false;
     }
 }

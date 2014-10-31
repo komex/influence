@@ -7,7 +7,7 @@
 
 namespace Test\Influence\Transformer\Mode;
 
-use Influence\Transformer\Mode\AbstractMode;
+use Influence\Transformer\TransformInterface;
 
 /**
  * Class TransformTestCase
@@ -18,12 +18,12 @@ use Influence\Transformer\Mode\AbstractMode;
 abstract class TransformTestCase extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @param AbstractMode $mode
+     * @param TransformInterface $mode
      * @param string $definition
      *
      * @return string
      */
-    protected function transform(AbstractMode $mode, $definition)
+    protected function transform(TransformInterface $mode, $definition)
     {
         $content = '';
         foreach (array_slice(token_get_all('<?php ' . $definition), 1) as $token) {
