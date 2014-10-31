@@ -27,6 +27,14 @@ class ImplementsMode extends AbstractMode
     private $starts = false;
 
     /**
+     * @return int
+     */
+    public function getCode()
+    {
+        return T_IMPLEMENTS;
+    }
+
+    /**
      * @param int|null $code
      * @param string $value
      *
@@ -38,11 +46,11 @@ class ImplementsMode extends AbstractMode
             $this->class .= $value;
             $this->starts = true;
         } elseif ($this->starts) {
-            $this->transformer->getClassMetaInfo()->addImplements(ltrim($this->class, '\\'));
+            $this->getTransformer()->getClassMetaInfo()->addImplements(ltrim($this->class, '\\'));
             $this->class = '';
             $this->starts = false;
         } elseif ($value === '{') {
-            $this->transformer->setMode(Transformer::MODE_CLASS_BODY);
+            $this->getTransformer()->setMode(Transformer::MODE_CLASS_BODY);
         }
 
         return $value;

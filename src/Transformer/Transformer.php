@@ -29,51 +29,27 @@ use Influence\Transformer\Mode\UseMode;
 class Transformer
 {
     /**
+     * Do nothing
+     */
+    const MODE_AS_IS = 1;
+    /**
      * Parse file.
      */
-    const MODE_FILE = 1;
-    /**
-     * Parse class namespace.
-     */
-    const MODE_NAMESPACE = 2;
-    /**
-     * Parse "use".
-     */
-    const MODE_USE = 3;
-    /**
-     * Parse class
-     */
-    const MODE_CLASS = 4;
-    /**
-     * Parse extends
-     */
-    const MODE_EXTENDS = 5;
-    /**
-     * Parse implements
-     */
-    const MODE_IMPLEMENTS = 6;
+    const MODE_FILE = 2;
     /**
      * Parse class body
      */
-    const MODE_CLASS_BODY = 7;
-    /**
-     * Parse method head
-     */
-    const MODE_METHOD_HEAD = 8;
+    const MODE_CLASS_BODY = 3;
     /**
      * Parse method body
      */
-    const MODE_METHOD_BODY = 9;
-    /**
-     * Do nothing
-     */
-    const MODE_AS_IS = 10;
+    const MODE_METHOD_BODY = 4;
     /**
      * @var int
      */
     private $mode;
     /**
-     * @var TransformerInterface[]
+     * @var AbstractMode[]
      */
     private $modes = [];
     /**
@@ -86,16 +62,22 @@ class Transformer
      */
     public function __construct()
     {
-        $this->registerMode(self::MODE_FILE, new FileMode());
-        $this->registerMode(self::MODE_USE, new UseMode());
-        $this->registerMode(self::MODE_NAMESPACE, new NamespaceMode());
-        $this->registerMode(self::MODE_CLASS, new ClassMode());
-        $this->registerMode(self::MODE_EXTENDS, new ExtendsMode());
-        $this->registerMode(self::MODE_IMPLEMENTS, new ImplementsMode());
-        $this->registerMode(self::MODE_CLASS_BODY, new ClassBodyMode());
-        $this->registerMode(self::MODE_METHOD_HEAD, new MethodHeadMode());
-        $this->registerMode(self::MODE_METHOD_BODY, new MethodBodyMode());
-        $this->registerMode(self::MODE_AS_IS, new AsIsMode());
+        /** @var AbstractMode[] $modes */
+        $modes = [
+            new FileMode(),
+            new UseMode(),
+            new NamespaceMode(),
+            new ClassMode(),
+            new ExtendsMode(),
+            new ImplementsMode(),
+            new ClassBodyMode(),
+            new MethodHeadMode(),
+            new MethodBodyMode(),
+            new AsIsMode(),
+        ];
+        foreach ($modes as $mode) {
+            $this->registerMode($mode->getCode(), $mode);
+        }
     }
 
     /**

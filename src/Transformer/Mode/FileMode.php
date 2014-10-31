@@ -18,6 +18,27 @@ use Influence\Transformer\Transformer;
 class FileMode extends AbstractMode
 {
     /**
+     * @var array
+     */
+    private static $modes = [T_USE, T_NAMESPACE, T_CLASS];
+    /**
+     * @var array
+     */
+    private static $attributes = [T_ABSTRACT, T_FINAL];
+    /**
+     * @var array
+     */
+    private static $skip = [T_INTERFACE, T_TRAIT];
+
+    /**
+     * @return int
+     */
+    public function getCode()
+    {
+        return Transformer::MODE_FILE;
+    }
+
+    /**
      * @param int|null $code
      * @param string $value
      *
@@ -25,25 +46,14 @@ class FileMode extends AbstractMode
      */
     public function transform($code, $value)
     {
-        switch ($code) {
-            case T_USE:
-                $this->transformer->setMode(Transformer::MODE_USE);
-                break;
-            case T_NAMESPACE:
-                $this->transformer->setMode(Transformer::MODE_NAMESPACE);
-                break;
-            case T_ABSTRACT:
-            case T_FINAL:
-                $this->transformer->getClassMetaInfo()->setAttribute($code);
-                break;
-            case T_CLASS:
-                $this->transformer->setMode(Transformer::MODE_CLASS);
-                break;
-            case T_INTERFACE:
-            case T_TRAIT:
-                $this->transformer->setMode(Transformer::MODE_AS_IS);
-                break;
+        if (in_array($code, self::$modes)) {
+            $this->getTransformer()->setMode($code);
+        } elseif (in_array($code, self::$attributes)) {
+            $this->getTransformer()->getClassMetaInfo()->setAttribute($code);
+        } elseif (in_array($code, self::$skip)) {
+            $this->getTransformer()->setMode(Transformer::MODE_AS_IS);
         }
+
         return $value;
     }
 }

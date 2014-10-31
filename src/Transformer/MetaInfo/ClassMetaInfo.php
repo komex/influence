@@ -100,7 +100,7 @@ class ClassMetaInfo extends AbstractMetaInfo
     public function addImplements($className)
     {
         if (!in_array($className, $this->implements)) {
-            $this->implements = $className;
+            $this->implements[] = $className;
         }
 
         return $this;

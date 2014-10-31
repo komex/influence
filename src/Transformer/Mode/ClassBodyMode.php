@@ -32,6 +32,14 @@ class ClassBodyMode extends AbstractMode
     private $static = false;
 
     /**
+     * @return int
+     */
+    public function getCode()
+    {
+        return Transformer::MODE_CLASS_BODY;
+    }
+
+    /**
      * @param int|null $code
      * @param string $value
      *
@@ -40,7 +48,7 @@ class ClassBodyMode extends AbstractMode
     public function transform($code, $value)
     {
         if ($value === '}') {
-            $this->transformer->setMode(Transformer::MODE_FILE);
+            $this->getTransformer()->setMode(Transformer::MODE_FILE);
         } else {
             switch ($code) {
                 case T_STATIC:
@@ -63,8 +71,8 @@ class ClassBodyMode extends AbstractMode
                     $method->setIsStatic($this->static);
                     $method->setAttribute($this->attribute);
                     $method->setVisibility($this->visibility);
-                    $this->transformer->getClassMetaInfo()->addMethod($method);
-                    $this->transformer->setMode(Transformer::MODE_METHOD_HEAD);
+                    $this->getTransformer()->getClassMetaInfo()->addMethod($method);
+                    $this->getTransformer()->setMode($code);
                     $this->reset();
                     break;
             }

@@ -18,6 +18,14 @@ use Influence\Transformer\Transformer;
 class MethodHeadMode extends AbstractMode
 {
     /**
+     * @return int
+     */
+    public function getCode()
+    {
+        return T_FUNCTION;
+    }
+
+    /**
      * @param int|null $code
      * @param string $value
      *
@@ -25,11 +33,11 @@ class MethodHeadMode extends AbstractMode
      */
     public function transform($code, $value)
     {
-        $method = $this->transformer->getClassMetaInfo()->currentMethod();
+        $method = $this->getTransformer()->getClassMetaInfo()->currentMethod();
         if ($code === T_STRING and $method->getName() === null) {
             $method->setName($value);
         } elseif ($value === ')') {
-            $this->transformer->setMode(Transformer::MODE_METHOD_BODY);
+            $this->getTransformer()->setMode(Transformer::MODE_METHOD_BODY);
         }
 
         return $value;

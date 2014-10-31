@@ -24,6 +24,14 @@ class MethodBodyMode extends AbstractMode
     private $level = 0;
 
     /**
+     * @return int
+     */
+    public function getCode()
+    {
+        return Transformer::MODE_METHOD_BODY;
+    }
+
+    /**
      * @param int|null $code
      * @param string $value
      *
@@ -34,19 +42,19 @@ class MethodBodyMode extends AbstractMode
         switch ($value) {
             case '{':
                 if ($this->level === 0) {
-                    $value .= $this->getCode($this->transformer->getClassMetaInfo()->currentMethod());
+                    $value .= $this->getInjectedCode($this->getTransformer()->getClassMetaInfo()->currentMethod());
                 }
                 $this->level++;
                 break;
             case '}':
                 $this->level--;
                 if ($this->level === 0) {
-                    $this->transformer->setMode(Transformer::MODE_CLASS_BODY);
+                    $this->getTransformer()->setMode(Transformer::MODE_CLASS_BODY);
                 }
                 break;
             case ';':
-                if ($this->transformer->getClassMetaInfo()->currentMethod()->getAttribute() === T_ABSTRACT) {
-                    $this->transformer->setMode(Transformer::MODE_CLASS_BODY);
+                if ($this->getTransformer()->getClassMetaInfo()->currentMethod()->getAttribute() === T_ABSTRACT) {
+                    $this->getTransformer()->setMode(Transformer::MODE_CLASS_BODY);
                 }
                 break;
         }
@@ -59,7 +67,7 @@ class MethodBodyMode extends AbstractMode
      *
      * @return string
      */
-    private function getCode(MethodMetaInfo $metaInfo)
+    private function getInjectedCode(MethodMetaInfo $metaInfo)
     {
         static $namespace = '\\Influence\\RemoteControl::';
         if ($metaInfo->getIsStatic() or $metaInfo->isConstructor()) {

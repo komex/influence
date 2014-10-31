@@ -23,6 +23,14 @@ class UseMode extends AbstractMode
     private $class = '';
 
     /**
+     * @return int
+     */
+    public function getCode()
+    {
+        return T_USE;
+    }
+
+    /**
      * @param int|null $code
      * @param string $value
      *
@@ -33,9 +41,9 @@ class UseMode extends AbstractMode
         if ($code === T_NS_SEPARATOR or $code === T_STRING) {
             $this->class .= $value;
         } elseif ($value === ';') {
-            $this->transformer->getClassMetaInfo()->addUses(ltrim($this->class, '\\'));
+            $this->getTransformer()->getClassMetaInfo()->addUses(ltrim($this->class, '\\'));
             $this->class = '';
-            $this->transformer->setMode(Transformer::MODE_FILE);
+            $this->getTransformer()->setMode(Transformer::MODE_FILE);
         }
 
         return $value;

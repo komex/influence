@@ -7,8 +7,6 @@
 
 namespace Influence\Transformer\Mode;
 
-use Influence\Transformer\Transformer;
-
 /**
  * Class ExtendsMode
  *
@@ -27,6 +25,14 @@ class ExtendsMode extends AbstractMode
     private $starts = false;
 
     /**
+     * @return int
+     */
+    public function getCode()
+    {
+        return T_EXTENDS;
+    }
+
+    /**
      * @param int|null $code
      * @param string $value
      *
@@ -38,10 +44,10 @@ class ExtendsMode extends AbstractMode
             $this->class .= $value;
             $this->starts = true;
         } elseif ($this->starts) {
-            $this->transformer->getClassMetaInfo()->setExtends(ltrim($this->class, '\\'));
+            $this->getTransformer()->getClassMetaInfo()->setExtends(ltrim($this->class, '\\'));
             $this->class = '';
             $this->starts = false;
-            $this->transformer->setMode(Transformer::MODE_CLASS);
+            $this->getTransformer()->setMode(T_CLASS);
         }
 
         return $value;
