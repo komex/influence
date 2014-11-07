@@ -7,25 +7,14 @@
 
 namespace Influence\Transformer\Mode;
 
-use Influence\Transformer\Transformer;
-
 /**
  * Class ExtendsMode
  *
  * @package Influence\Transformer\Mode
  * @author Andrey Kolchenko <andrey@kolchenko.me>
  */
-class ExtendsMode extends AbstractMode
+class ExtendsMode extends AbstractClassHierarchy
 {
-    /**
-     * @var string
-     */
-    private $class = '';
-    /**
-     * @var bool
-     */
-    private $starts = false;
-
     /**
      * @return int
      */
@@ -35,24 +24,13 @@ class ExtendsMode extends AbstractMode
     }
 
     /**
-     * @param int|null $code
-     * @param string $value
+     * @param string $className
      *
-     * @return string
+     * @internal param Transformer $transformer
+     * @return void
      */
-    public function transform($code, $value)
+    protected function setter($className)
     {
-        if ($code === T_NS_SEPARATOR or $code === T_STRING) {
-            $this->class .= $value;
-            $this->starts = true;
-        } elseif ($this->starts) {
-            $this->getTransformer()->getClassMetaInfo()->setExtends(ltrim($this->class, '\\'));
-            $this->class = '';
-            $this->starts = false;
-            $mode = ($value === '{' ? Transformer::MODE_CLASS_BODY : T_CLASS);
-            $this->getTransformer()->setMode($mode);
-        }
-
-        return $value;
+        $this->getTransformer()->setMode(T_CLASS)->getClassMetaInfo()->setExtends($className);
     }
 }
