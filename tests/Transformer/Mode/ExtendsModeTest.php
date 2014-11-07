@@ -32,6 +32,8 @@ class ExtendsModeTest extends TransformTestCase
     }
 
     /**
+     * Test correct extraction extends class name.
+     *
      * @param string $definition
      * @param string $correctClassName
      * @param int $correctMode

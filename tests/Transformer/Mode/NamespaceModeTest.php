@@ -11,44 +11,43 @@ use Influence\Transformer\MetaInfo\ClassMetaInfo;
 use Influence\Transformer\Transformer;
 
 /**
- * Class ImplementsModeTest
+ * Class NamespaceModeTest
  *
  * @package Test\Influence\Transformer\Mode
  * @author Andrey Kolchenko <andrey@kolchenko.me>
  */
-class ImplementsModeTest extends TransformTestCase
+class NamespaceModeTest extends TransformTestCase
 {
     /**
      * @return array
      */
-    public function dpImplements()
+    public function dpNamespace()
     {
         return [
-            ['ClassName', [], T_IMPLEMENTS],
-            [' SomeClass ', ['SomeClass'], T_IMPLEMENTS],
-            ['\\SomeClass{', ['SomeClass'], Transformer::MODE_CLASS_BODY],
-            [' NS\\Some\\ClassName' . PHP_EOL, ['NS\\Some\\ClassName'], T_IMPLEMENTS],
-            [' SomeClass , \\NS\\SomeClass ', ['SomeClass', 'NS\\SomeClass'], T_IMPLEMENTS],
+            ['ClassName', null, T_NAMESPACE],
+            [' SomeClass ;', 'SomeClass', Transformer::MODE_FILE],
+            ['\\SomeClass;', 'SomeClass', Transformer::MODE_FILE],
+            [' NS\\Some\\ClassName;', 'NS\\Some\\ClassName', Transformer::MODE_FILE],
         ];
     }
 
     /**
-     * Test correct extraction implements class names.
+     * Test correct extraction namespace.
      *
      * @param string $definition
      * @param string $correctClassName
      * @param int $correctMode
      *
-     * @dataProvider dpImplements
+     * @dataProvider dpNamespace
      */
-    public function testImplements($definition, $correctClassName, $correctMode)
+    public function testNamespace($definition, $correctClassName, $correctMode)
     {
         $classMeta = new ClassMetaInfo();
         $transformer = new Transformer();
         $transformer->setClassMetaInfo($classMeta);
-        $transformer->setMode(T_IMPLEMENTS);
+        $transformer->setMode(T_NAMESPACE);
         $this->assertSame($definition, $this->transform($transformer, $definition));
-        $this->assertSame($correctClassName, $classMeta->getImplements());
+        $this->assertSame($correctClassName, $classMeta->getNamespace());
         $this->assertSame($correctMode, $transformer->getMode());
     }
 }
