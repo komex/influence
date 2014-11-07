@@ -7,12 +7,18 @@
 
 namespace Influence\Transformer;
 
+use Influence\Transformer\MetaInfo\ClassMetaInfo;
 use Influence\Transformer\Mode\AbstractMode;
 use Influence\Transformer\Mode\AsIsMode;
 use Influence\Transformer\Mode\ClassBodyMode;
 use Influence\Transformer\Mode\ClassMode;
+use Influence\Transformer\Mode\ExtendsMode;
 use Influence\Transformer\Mode\FileMode;
-use Influence\Transformer\Mode\MethodMode;
+use Influence\Transformer\Mode\ImplementsMode;
+use Influence\Transformer\Mode\MethodHeadMode;
+use Influence\Transformer\Mode\MethodBodyMode;
+use Influence\Transformer\Mode\NamespaceMode;
+use Influence\Transformer\Mode\UseMode;
 
 /**
  * Class Transformer
@@ -20,46 +26,78 @@ use Influence\Transformer\Mode\MethodMode;
  * @package Influence\Transformer
  * @author Andrey Kolchenko <andrey@kolchenko.me>
  */
-class Transformer implements TransformerInterface
+class Transformer implements TransformInterface
 {
-    const MODE_FILE = 1;
-    const MODE_CLASS = 2;
-    const MODE_CLASS_BODY = 3;
-    const MODE_METHOD = 4;
-    const MODE_AS_IS = 5;
     /**
-     * @var TransformerInterface
+     * Do nothing
+     */
+    const MODE_AS_IS = 1;
+    /**
+     * Parse file.
+     */
+    const MODE_FILE = 2;
+    /**
+     * Parse class body
+     */
+    const MODE_CLASS_BODY = 3;
+    /**
+     * Parse method body
+     */
+    const MODE_METHOD_BODY = 4;
+    /**
+     * @var int
      */
     private $mode;
     /**
-     * @var array
+     * @var AbstractMode[]
      */
     private $modes = [];
+    /**
+     * @var ClassMetaInfo
+     */
+    private $classMetaInfo;
 
     /**
      * Init modes
      */
     public function __construct()
     {
-        $this->registerMode(self::MODE_FILE, new FileMode());
-        $this->registerMode(self::MODE_CLASS, new ClassMode());
-        $this->registerMode(self::MODE_CLASS_BODY, new ClassBodyMode());
-        $this->registerMode(self::MODE_METHOD, new MethodMode());
-        $this->registerMode(self::MODE_AS_IS, new AsIsMode());
-        $this->reset();
+        /** @var AbstractMode[] $modes */
+        $modes = [
+            new FileMode(),
+            new UseMode(),
+            new NamespaceMode(),
+            new ClassMode(),
+            new ExtendsMode(),
+            new ImplementsMode(),
+            new ClassBodyMode(),
+            new MethodHeadMode(),
+            new MethodBodyMode(),
+            new AsIsMode(),
+        ];
+        foreach ($modes as $mode) {
+            $this->registerMode($mode->getCode(), $mode);
+        }
+    }
+
+    /**
+     * @return int
+     */
+    public function getMode()
+    {
+        return $this->mode;
     }
 
     /**
      * @param int $mode
      *
-     * @return AbstractMode
+     * @return $this
      */
     public function setMode($mode)
     {
-        $mode = $this->modes[$mode];
         $this->mode = $mode;
 
-        return $mode;
+        return $this;
     }
 
     /**
@@ -70,17 +108,28 @@ class Transformer implements TransformerInterface
      */
     public function transform($code, $value)
     {
-        return $this->mode->transform($code, $value);
+        return $this->modes[$this->mode]->transform($code, $value);
     }
 
     /**
-     * @param mixed $defaultValue
-     *
-     * @return void
+     * @return ClassMetaInfo
      */
-    public function reset($defaultValue = null)
+    public function getClassMetaInfo()
     {
-        $this->setMode(self::MODE_FILE)->reset();
+        return $this->classMetaInfo;
+    }
+
+    /**
+     * @param ClassMetaInfo $classMetaInfo
+     *
+     * @return $this
+     */
+    public function setClassMetaInfo(ClassMetaInfo $classMetaInfo)
+    {
+        $this->classMetaInfo = $classMetaInfo;
+        $this->setMode(self::MODE_FILE);
+
+        return $this;
     }
 
     /**

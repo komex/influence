@@ -1,19 +1,20 @@
 <?php
 /**
- * This file is a part of RemoteControl project.
+ * This file is a part of influence project.
  *
  * (c) Andrey Kolchenko <andrey@kolchenko.me>
  */
 
 namespace Influence\Transformer;
 
+
 /**
- * Interface TransformerInterface
+ * Interface TransformInterface
  *
  * @package Influence\Transformer
  * @author Andrey Kolchenko <andrey@kolchenko.me>
  */
-interface TransformerInterface
+interface TransformInterface
 {
     /**
      * @param int|null $code
@@ -22,11 +23,4 @@ interface TransformerInterface
      * @return string
      */
     public function transform($code, $value);
-
-    /**
-     * @param mixed $defaultValue
-     *
-     * @return void
-     */
-    public function reset($defaultValue = null);
 }
