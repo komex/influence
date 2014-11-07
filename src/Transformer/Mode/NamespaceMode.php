@@ -7,7 +7,7 @@
 
 namespace Influence\Transformer\Mode;
 
-use Influence\Transformer\Transformer;
+use Influence\Transformer\MetaInfo\ClassMetaInfo;
 
 /**
  * Class NamespaceMode
@@ -15,13 +15,8 @@ use Influence\Transformer\Transformer;
  * @package Influence\Transformer\Mode
  * @author Andrey Kolchenko <andrey@kolchenko.me>
  */
-class NamespaceMode extends AbstractMode
+class NamespaceMode extends AbstractNamespaceMode
 {
-    /**
-     * @var string
-     */
-    private $class = '';
-
     /**
      * @return int
      */
@@ -31,21 +26,13 @@ class NamespaceMode extends AbstractMode
     }
 
     /**
-     * @param int|null $code
-     * @param string $value
+     * @param ClassMetaInfo $classMetaInfo
+     * @param string $className
      *
-     * @return string
+     * @return void
      */
-    public function transform($code, $value)
+    protected function setter(ClassMetaInfo $classMetaInfo, $className)
     {
-        if ($code === T_NS_SEPARATOR or $code === T_STRING) {
-            $this->class .= $value;
-        } elseif ($value === ';') {
-            $this->getTransformer()->getClassMetaInfo()->setNamespace(ltrim($this->class, '\\'));
-            $this->class = '';
-            $this->getTransformer()->setMode(Transformer::MODE_FILE);
-        }
-
-        return $value;
+        $classMetaInfo->setNamespace($className);
     }
 }
