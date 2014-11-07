@@ -36,6 +36,9 @@ class MethodHeadModeTest extends TransformTestCase
     /**
      * Test correct extract method name.
      *
+     * @param string $definition
+     * @param string $correctMethodName
+     *
      * @dataProvider dpExtractMethodName
      */
     public function testExtractMethodName($definition, $correctMethodName)
