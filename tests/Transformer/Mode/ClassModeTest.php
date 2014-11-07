@@ -36,6 +36,10 @@ class ClassModeTest extends TransformTestCase
     /**
      * Test correct extract method name.
      *
+     * @param string $definition
+     * @param string $correctClassName
+     * @param int $correctMode
+     *
      * @dataProvider dpSwitchingModes
      */
     public function testSwitchingModes($definition, $correctClassName, $correctMode)
