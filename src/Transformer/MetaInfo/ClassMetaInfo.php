@@ -32,9 +32,17 @@ class ClassMetaInfo extends AbstractMetaInfo
      */
     private $extends;
     /**
-     * @var MethodMetaInfo[]
+     * @var \SplDoublyLinkedList|MethodMetaInfo[]
      */
-    private $methods = [];
+    private $methods;
+
+    /**
+     * Init
+     */
+    public function __construct()
+    {
+        $this->methods = new \SplDoublyLinkedList;
+    }
 
     /**
      * @param MethodMetaInfo $method
@@ -49,7 +57,7 @@ class ClassMetaInfo extends AbstractMetaInfo
     }
 
     /**
-     * @return MethodMetaInfo[]
+     * @return \SplDoublyLinkedList|MethodMetaInfo[]
      */
     public function getMethods()
     {
@@ -61,7 +69,7 @@ class ClassMetaInfo extends AbstractMetaInfo
      */
     public function currentMethod()
     {
-        return current(array_slice($this->methods, -1, 1));
+        return $this->methods->top();
     }
 
     /**

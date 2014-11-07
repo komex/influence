@@ -37,6 +37,8 @@ class RemoteControlTest extends \PHPUnit_Framework_TestCase
     /**
      * Test getting invalid class name.
      *
+     * @param mixed $target
+     *
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Target must be an object.
      *
@@ -63,6 +65,8 @@ class RemoteControlTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test getting invalid class name.
+     *
+     * @param mixed $target
      *
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Target must be an object or string of class name.
@@ -157,6 +161,8 @@ class RemoteControlTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test incoming arguments for getStatic.
+     *
+     * @param mixed $target
      *
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Target must be an object or string of class name.
