@@ -7,6 +7,10 @@
 
 namespace Influence\Manifest;
 
+use Influence\ReturnStrategy\ReturnInterface;
+use Influence\ReturnStrategy\UseArgsReturnInterface;
+use Influence\ReturnStrategy\UseScopeReturnInterface;
+
 /**
  * Class MethodManifest
  *
@@ -24,13 +28,9 @@ class MethodManifest
      */
     private $log = false;
     /**
-     * @var mixed
+     * @var ReturnInterface
      */
     private $value;
-    /**
-     * @var bool
-     */
-    private $useDefaultValue = true;
 
     /**
      * @param boolean $log
@@ -76,28 +76,31 @@ class MethodManifest
      * Return custom value.
      *
      * @param array $arguments
-     * @param $scope
+     * @param object|string $scope
      *
      * @return mixed
      */
     public function getValue(array $arguments, $scope)
     {
-        if (is_callable($this->value)) {
-            $handler = $this->value->bindTo((is_object($scope) ? $scope : null), $scope);
-
-            return call_user_func_array($handler, $arguments);
-        } else {
-            return $this->value;
+        if ($this->value === null) {
+            return null;
         }
+        if ($this->value instanceof UseArgsReturnInterface) {
+            $this->value->setArguments($arguments);
+        }
+        if ($this->value instanceof UseScopeReturnInterface) {
+            $this->value->setScope($scope);
+        }
+
+        return $this->value->getValue();
     }
 
     /**
-     * @param mixed $value
+     * @param ReturnInterface $value
      */
-    public function setValue($value)
+    public function setValue(ReturnInterface $value = null)
     {
         $this->value = $value;
-        $this->useDefaultValue = false;
     }
 
     /**
@@ -105,17 +108,6 @@ class MethodManifest
      */
     public function hasValue()
     {
-        return !$this->useDefaultValue;
-    }
-
-    /**
-     * @param bool $resetCustomValue
-     */
-    public function useDefaultValue($resetCustomValue = true)
-    {
-        $this->useDefaultValue = true;
-        if ($resetCustomValue) {
-            $this->value = null;
-        }
+        return $this->value !== null;
     }
 }
