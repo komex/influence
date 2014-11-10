@@ -25,7 +25,7 @@ class ReturnCallback implements ReturnInterface, UseArgsReturnInterface
     private $arguments;
 
     /**
-     * @param callable $handler
+     * @param \Closure $handler
      */
     public function __construct(\Closure $handler)
     {
