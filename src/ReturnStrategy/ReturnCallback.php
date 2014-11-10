@@ -22,7 +22,7 @@ class ReturnCallback implements ReturnInterface, UseArgsReturnInterface
     /**
      * @var array
      */
-    private $arguments;
+    private $arguments = [];
 
     /**
      * @param \Closure $handler

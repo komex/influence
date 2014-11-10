@@ -5,29 +5,30 @@
  * (c) Andrey Kolchenko <andrey@kolchenko.me>
  */
 
-namespace Test\Influence\ReturnStrategy;
+namespace ReturnStrategy;
 
-use Influence\ReturnStrategy\ReturnCallback;
+use Influence\ReturnStrategy\ReturnCallbackScope;
 
 /**
- * Class ReturnCallbackTest
+ * Class ReturnCallbackScopeTest
  *
  * @package ReturnStrategy
  * @author Andrey Kolchenko <andrey@kolchenko.me>
  */
-class ReturnCallbackTest extends \PHPUnit_Framework_TestCase
+class ReturnCallbackScopeTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Test strategy implements interfaces.
      */
     public function testImplements()
     {
-        $return = new ReturnCallback(
+        $return = new ReturnCallbackScope(
             function () {
             }
         );
         $this->assertInstanceOf('Influence\\ReturnStrategy\\ReturnInterface', $return);
         $this->assertInstanceOf('Influence\\ReturnStrategy\\UseArgsReturnInterface', $return);
+        $this->assertInstanceOf('Influence\\ReturnStrategy\\UseScopeReturnInterface', $return);
     }
 
     /**
@@ -35,7 +36,7 @@ class ReturnCallbackTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetValue()
     {
-        $return = new ReturnCallback(
+        $return = new ReturnCallbackScope(
             function () {
                 return array_reverse(func_get_args());
             }
@@ -49,11 +50,20 @@ class ReturnCallbackTest extends \PHPUnit_Framework_TestCase
      */
     public function testScope()
     {
-        $return = new ReturnCallback(
-            function () {
+        $return = new ReturnCallbackScope(
+            function ($firstProperty) {
+                $this->testProperty = $firstProperty;
+
                 return $this;
             }
         );
-        $this->assertSame($this, $return->getValue());
+        $testObject = new \stdClass();
+        $this->assertObjectNotHasAttribute('testProperty', $testObject);
+        $return->setScope($testObject);
+        $return->setArguments(['a', 1, true, [0.5]]);
+
+        $this->assertSame($testObject, $return->getValue());
+        $this->assertObjectHasAttribute('testProperty', $testObject);
+        $this->assertSame('a', $testObject->testProperty);
     }
 }
