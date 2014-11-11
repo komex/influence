@@ -8,12 +8,12 @@
 namespace Influence\ReturnStrategy;
 
 /**
- * Class ReturnCallbackScope
+ * Class CallbackScope
  *
  * @package Influence\ReturnStrategy
  * @author Andrey Kolchenko <andrey@kolchenko.me>
  */
-class ReturnCallbackScope extends ReturnCallback implements UseScopeReturnInterface
+class CallbackScope extends Callback implements ScopeInterface
 {
     /**
      * @inheritdoc

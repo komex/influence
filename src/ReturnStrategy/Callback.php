@@ -8,12 +8,12 @@
 namespace Influence\ReturnStrategy;
 
 /**
- * Class ReturnCallback
+ * Class Callback
  *
  * @package Influence\ReturnStrategy
  * @author Andrey Kolchenko <andrey@kolchenko.me>
  */
-class ReturnCallback implements ReturnInterface, UseArgsReturnInterface
+class Callback implements ReturnInterface, ArgumentsInterface
 {
     /**
      * @var callable

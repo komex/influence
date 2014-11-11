@@ -8,12 +8,12 @@
 namespace Influence\ReturnStrategy;
 
 /**
- * Interface UseScopeReturnInterface
+ * Interface ScopeInterface
  *
  * @package Influence\ReturnStrategy
  * @author Andrey Kolchenko <andrey@kolchenko.me>
  */
-interface UseScopeReturnInterface
+interface ScopeInterface
 {
     /**
      * Set object or class scope for closure handler.

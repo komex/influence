@@ -8,12 +8,12 @@
 namespace Influence\ReturnStrategy;
 
 /**
- * Class ReturnValue
+ * Class Value
  *
  * @package Influence\ReturnStrategy
  * @author Andrey Kolchenko <andrey@kolchenko.me>
  */
-class ReturnValue implements ReturnInterface
+class Value implements ReturnInterface
 {
     /**
      * @var mixed

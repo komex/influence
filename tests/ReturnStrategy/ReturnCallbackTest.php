@@ -7,7 +7,7 @@
 
 namespace Test\Influence\ReturnStrategy;
 
-use Influence\ReturnStrategy\ReturnCallback;
+use Influence\ReturnStrategy\Callback;
 
 /**
  * Class ReturnCallbackTest
@@ -22,12 +22,12 @@ class ReturnCallbackTest extends \PHPUnit_Framework_TestCase
      */
     public function testImplements()
     {
-        $return = new ReturnCallback(
+        $return = new Callback(
             function () {
             }
         );
         $this->assertInstanceOf('Influence\\ReturnStrategy\\ReturnInterface', $return);
-        $this->assertInstanceOf('Influence\\ReturnStrategy\\UseArgsReturnInterface', $return);
+        $this->assertInstanceOf('Influence\\ReturnStrategy\\ArgumentsInterface', $return);
     }
 
     /**
@@ -35,7 +35,7 @@ class ReturnCallbackTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetValue()
     {
-        $return = new ReturnCallback(
+        $return = new Callback(
             function () {
                 return array_reverse(func_get_args());
             }
@@ -49,7 +49,7 @@ class ReturnCallbackTest extends \PHPUnit_Framework_TestCase
      */
     public function testScope()
     {
-        $return = new ReturnCallback(
+        $return = new Callback(
             function () {
                 return $this;
             }

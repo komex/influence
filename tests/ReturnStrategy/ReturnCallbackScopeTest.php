@@ -7,7 +7,7 @@
 
 namespace ReturnStrategy;
 
-use Influence\ReturnStrategy\ReturnCallbackScope;
+use Influence\ReturnStrategy\CallbackScope;
 
 /**
  * Class ReturnCallbackScopeTest
@@ -22,13 +22,13 @@ class ReturnCallbackScopeTest extends \PHPUnit_Framework_TestCase
      */
     public function testImplements()
     {
-        $return = new ReturnCallbackScope(
+        $return = new CallbackScope(
             function () {
             }
         );
         $this->assertInstanceOf('Influence\\ReturnStrategy\\ReturnInterface', $return);
-        $this->assertInstanceOf('Influence\\ReturnStrategy\\UseArgsReturnInterface', $return);
-        $this->assertInstanceOf('Influence\\ReturnStrategy\\UseScopeReturnInterface', $return);
+        $this->assertInstanceOf('Influence\\ReturnStrategy\\ArgumentsInterface', $return);
+        $this->assertInstanceOf('Influence\\ReturnStrategy\\ScopeInterface', $return);
     }
 
     /**
@@ -36,7 +36,7 @@ class ReturnCallbackScopeTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetValue()
     {
-        $return = new ReturnCallbackScope(
+        $return = new CallbackScope(
             function () {
                 return array_reverse(func_get_args());
             }
@@ -50,7 +50,7 @@ class ReturnCallbackScopeTest extends \PHPUnit_Framework_TestCase
      */
     public function testScope()
     {
-        $return = new ReturnCallbackScope(
+        $return = new CallbackScope(
             function ($firstProperty) {
                 $this->testProperty = $firstProperty;
 

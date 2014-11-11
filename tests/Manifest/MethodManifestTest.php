@@ -8,9 +8,9 @@
 namespace Test\Influence\Manifest;
 
 use Influence\Manifest\MethodManifest;
-use Influence\ReturnStrategy\ReturnCallback;
-use Influence\ReturnStrategy\ReturnCallbackScope;
-use Influence\ReturnStrategy\ReturnValue;
+use Influence\ReturnStrategy\Callback;
+use Influence\ReturnStrategy\CallbackScope;
+use Influence\ReturnStrategy\Value;
 use Test\Influence\SimpleClass;
 
 /**
@@ -108,7 +108,7 @@ class MethodManifestTest extends \PHPUnit_Framework_TestCase
     public function testGetValueScalar($data)
     {
         $manifest = new MethodManifest();
-        $manifest->setValue(new ReturnValue($data));
+        $manifest->setValue(new Value($data));
         $this->assertTrue($manifest->hasValue());
         $this->assertSame($data, $manifest->getValue([], null));
     }
@@ -119,7 +119,7 @@ class MethodManifestTest extends \PHPUnit_Framework_TestCase
     public function testGetValueClosure()
     {
         $manifest = new MethodManifest();
-        $handler = new ReturnCallback(
+        $handler = new Callback(
             function ($first, $second) {
                 return $first + $second + 1;
             }
@@ -136,7 +136,7 @@ class MethodManifestTest extends \PHPUnit_Framework_TestCase
     {
         $class = new SimpleClass();
         $manifest = new MethodManifest();
-        $handler = new ReturnCallbackScope(
+        $handler = new CallbackScope(
             function ($first, $second) {
                 $this->a = 4;
 

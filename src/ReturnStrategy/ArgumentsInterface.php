@@ -8,12 +8,12 @@
 namespace Influence\ReturnStrategy;
 
 /**
- * Interface UseArgsReturnInterface
+ * Interface ArgumentsInterface
  *
  * @package Influence\ReturnStrategy
  * @author Andrey Kolchenko <andrey@kolchenko.me>
  */
-interface UseArgsReturnInterface
+interface ArgumentsInterface
 {
     /**
      * @param array $arguments

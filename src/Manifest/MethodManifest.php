@@ -8,8 +8,8 @@
 namespace Influence\Manifest;
 
 use Influence\ReturnStrategy\ReturnInterface;
-use Influence\ReturnStrategy\UseArgsReturnInterface;
-use Influence\ReturnStrategy\UseScopeReturnInterface;
+use Influence\ReturnStrategy\ArgumentsInterface;
+use Influence\ReturnStrategy\ScopeInterface;
 
 /**
  * Class MethodManifest
@@ -85,10 +85,10 @@ class MethodManifest
         if ($this->value === null) {
             return null;
         }
-        if ($this->value instanceof UseArgsReturnInterface) {
+        if ($this->value instanceof ArgumentsInterface) {
             $this->value->setArguments($arguments);
         }
-        if ($this->value instanceof UseScopeReturnInterface) {
+        if ($this->value instanceof ScopeInterface) {
             $this->value->setScope($scope);
         }
 

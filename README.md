@@ -73,7 +73,7 @@ But with **Influence** you can simply test this code. Just specify the behavior 
 ```php
 $a = new A();
 $method = Influence\RemoteControl::controlObject($a)->get('rand');
-$method->setValue(new ReturnValue(1));
+$method->setValue(new Value(1));
 echo $a->sum(1); // 2
 echo $a->sum(7); // 8
 $method->setValue();
