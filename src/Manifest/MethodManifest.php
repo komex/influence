@@ -7,6 +7,10 @@
 
 namespace Influence\Manifest;
 
+use Influence\ReturnStrategy\ReturnInterface;
+use Influence\ReturnStrategy\ArgumentsInterface;
+use Influence\ReturnStrategy\ScopeInterface;
+
 /**
  * Class MethodManifest
  *
@@ -24,13 +28,32 @@ class MethodManifest
      */
     private $log = false;
     /**
-     * @var mixed
+     * @var ReturnInterface
      */
     private $value;
+
     /**
-     * @var bool
+     * Recursive extract value.
+     *
+     * @param ReturnInterface $extractor
+     * @param array $arguments
+     * @param object|string $scope
+     *
+     * @return mixed
      */
-    private $useDefaultValue = true;
+    public static function extractValue(ReturnInterface $extractor, array $arguments, $scope)
+    {
+        if ($extractor instanceof ArgumentsInterface) {
+            $extractor->setArguments($arguments);
+        }
+        if ($extractor instanceof ScopeInterface) {
+            $extractor->setScope($scope);
+        }
+
+        $value = $extractor->getValue();
+
+        return ($value instanceof ReturnInterface) ? self::extractValue($value, $arguments, $scope) : $value;
+    }
 
     /**
      * @param boolean $log
@@ -76,28 +99,25 @@ class MethodManifest
      * Return custom value.
      *
      * @param array $arguments
-     * @param $scope
+     * @param object|string $scope
      *
      * @return mixed
      */
     public function getValue(array $arguments, $scope)
     {
-        if (is_callable($this->value)) {
-            $handler = $this->value->bindTo((is_object($scope) ? $scope : null), $scope);
-
-            return call_user_func_array($handler, $arguments);
-        } else {
-            return $this->value;
+        if ($this->value === null) {
+            return null;
         }
+
+        return self::extractValue($this->value, $arguments, $scope);
     }
 
     /**
-     * @param mixed $value
+     * @param ReturnInterface $value
      */
-    public function setValue($value)
+    public function setValue(ReturnInterface $value = null)
     {
         $this->value = $value;
-        $this->useDefaultValue = false;
     }
 
     /**
@@ -105,17 +125,6 @@ class MethodManifest
      */
     public function hasValue()
     {
-        return !$this->useDefaultValue;
-    }
-
-    /**
-     * @param bool $resetCustomValue
-     */
-    public function useDefaultValue($resetCustomValue = true)
-    {
-        $this->useDefaultValue = true;
-        if ($resetCustomValue) {
-            $this->value = null;
-        }
+        return $this->value !== null;
     }
 }

@@ -8,6 +8,9 @@
 namespace Test\Influence\Manifest;
 
 use Influence\Manifest\MethodManifest;
+use Influence\ReturnStrategy\Callback;
+use Influence\ReturnStrategy\CallbackScope;
+use Influence\ReturnStrategy\Value;
 use Test\Influence\SimpleClass;
 
 /**
@@ -98,12 +101,14 @@ class MethodManifestTest extends \PHPUnit_Framework_TestCase
     /**
      * Test getValue with scalar data.
      *
+     * @param mixed $data
+     *
      * @dataProvider dpGetValueScalar
      */
     public function testGetValueScalar($data)
     {
         $manifest = new MethodManifest();
-        $manifest->setValue($data);
+        $manifest->setValue(new Value($data));
         $this->assertTrue($manifest->hasValue());
         $this->assertSame($data, $manifest->getValue([], null));
     }
@@ -114,11 +119,12 @@ class MethodManifestTest extends \PHPUnit_Framework_TestCase
     public function testGetValueClosure()
     {
         $manifest = new MethodManifest();
-        $manifest->setValue(
-            function ($a, $b) {
-                return 1 + $a + $b;
+        $handler = new Callback(
+            function ($first, $second) {
+                return $first + $second + 1;
             }
         );
+        $manifest->setValue($handler);
         $this->assertTrue($manifest->hasValue());
         $this->assertSame(6, $manifest->getValue([2, 3], null));
     }
@@ -130,13 +136,14 @@ class MethodManifestTest extends \PHPUnit_Framework_TestCase
     {
         $class = new SimpleClass();
         $manifest = new MethodManifest();
-        $manifest->setValue(
-            function ($a, $b) {
+        $handler = new CallbackScope(
+            function ($first, $second) {
                 $this->a = 4;
 
-                return $this->a + $a + $b;
+                return $first + $second + $this->a;
             }
         );
+        $manifest->setValue($handler);
         $this->assertSame(9, $manifest->getValue([2, 3], $class));
         $this->assertSame(4, $class->getA());
     }
@@ -144,24 +151,11 @@ class MethodManifestTest extends \PHPUnit_Framework_TestCase
     /**
      * Test reset method intercept with reset custom value in manifest.
      */
-    public function testUseDefaultValueReset()
+    public function testUseDefaultValue()
     {
         $manifest = new MethodManifest();
-        $manifest->setValue(5);
-        $manifest->useDefaultValue();
+        $manifest->setValue();
         $this->assertFalse($manifest->hasValue());
         $this->assertNull($manifest->getValue([], null));
-    }
-
-    /**
-     * Test reset method intercept without reset custom value in manifest.
-     */
-    public function testUseDefaultValueKeep()
-    {
-        $manifest = new MethodManifest();
-        $manifest->setValue(5);
-        $manifest->useDefaultValue(false);
-        $this->assertFalse($manifest->hasValue());
-        $this->assertSame(5, $manifest->getValue([], null));
     }
 }

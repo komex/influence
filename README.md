@@ -3,6 +3,7 @@
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/komex/influence/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/komex/influence/?branch=master)
 [![Latest Stable Version](https://poser.pugx.org/komex/influence/v/stable.svg)](https://packagist.org/packages/komex/influence)
 [![License](https://poser.pugx.org/komex/influence/license.svg)](https://packagist.org/packages/komex/influence)
+[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/komex/influence)
 
 # Influence
 
@@ -72,10 +73,10 @@ But with **Influence** you can simply test this code. Just specify the behavior 
 ```php
 $a = new A();
 $method = Influence\RemoteControl::controlObject($a)->get('rand');
-$method->setValue(1);
+$method->setValue(new Value(1));
 echo $a->sum(1); // 2
 echo $a->sum(7); // 8
-$method->useDefaultValue();
+$method->setValue();
 echo $a->sum(1); // ??
 echo $a->sum(7); // ??
 ```
