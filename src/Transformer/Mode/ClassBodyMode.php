@@ -7,6 +7,7 @@
 
 namespace Influence\Transformer\Mode;
 
+use Influence\Transformer\MetaInfo\MethodMetaInfo;
 use Influence\Transformer\Transformer;
 
 /**
@@ -18,9 +19,25 @@ use Influence\Transformer\Transformer;
 class ClassBodyMode extends AbstractMode
 {
     /**
+     * @var int
+     */
+    private $visibility = T_PUBLIC;
+    /**
+     * @var int
+     */
+    private $attribute;
+    /**
      * @var bool
      */
     private $static = false;
+
+    /**
+     * @return int
+     */
+    public function getCode()
+    {
+        return Transformer::MODE_CLASS_BODY;
+    }
 
     /**
      * @param int|null $code
@@ -30,30 +47,47 @@ class ClassBodyMode extends AbstractMode
      */
     public function transform($code, $value)
     {
-        switch ($code) {
-            case T_STATIC:
-                $this->static = true;
-                break;
-            case T_VARIABLE:
-                $this->static = false;
-                break;
-            case T_FUNCTION:
-                $this->transformer->setMode(Transformer::MODE_METHOD)->reset($this->static);
-                break;
-            case null:
-                if ($value === '}') {
-                    $this->transformer->setMode(Transformer::MODE_FILE)->reset();
-                }
-                break;
+        if ($value === '}') {
+            $this->getTransformer()->setMode(Transformer::MODE_FILE);
+        } else {
+            switch ($code) {
+                case T_STATIC:
+                    $this->static = true;
+                    break;
+                case T_PUBLIC:
+                case T_PROTECTED:
+                case T_PRIVATE:
+                    $this->visibility = $code;
+                    break;
+                case T_ABSTRACT:
+                case T_FINAL:
+                    $this->attribute = $code;
+                    break;
+                case T_VARIABLE:
+                    $this->reset();
+                    break;
+                case T_FUNCTION:
+                    $method = new MethodMetaInfo();
+                    $method->setIsStatic($this->static);
+                    $method->setAttribute($this->attribute);
+                    $method->setVisibility($this->visibility);
+                    $this->getTransformer()->getClassMetaInfo()->addMethod($method);
+                    $this->getTransformer()->setMode($code);
+                    $this->reset();
+                    break;
+            }
         }
+
         return $value;
     }
 
     /**
-     * @param null $defaultValue
+     * Reset modifications.
      */
-    public function reset($defaultValue = null)
+    private function reset()
     {
+        $this->visibility = T_PUBLIC;
+        $this->attribute = null;
         $this->static = false;
     }
 }

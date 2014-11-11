@@ -7,6 +7,8 @@
 
 namespace Influence\Transformer\Mode;
 
+use Influence\Transformer\Transformer;
+
 /**
  * Class AsIsMode
  *
@@ -15,6 +17,14 @@ namespace Influence\Transformer\Mode;
  */
 class AsIsMode extends AbstractMode
 {
+    /**
+     * @return int
+     */
+    public function getCode()
+    {
+        return Transformer::MODE_AS_IS;
+    }
+
     /**
      * @param int|null $code
      * @param string $value

@@ -2,77 +2,182 @@
 /**
  * This file is a part of RemoteControl project.
  *
- * (c) Andrey Kolchenko <a.j.kolchenko@baltsoftservice.ru>
+ * (c) Andrey Kolchenko <andrey@kolchenko.me>
  */
 
 namespace Influence;
+
+use Influence\Manifest\Manifest;
 
 /**
  * Class RemoteControl
  *
  * @package Influence
- * @author Andrey Kolchenko <a.j.kolchenko@baltsoftservice.ru>
+ * @author Andrey Kolchenko <andrey@kolchenko.me>
  */
 class RemoteControl
 {
     /**
-     * @var array
+     * @var Manifest[]
      */
-    private static $map = [];
+    private static $classes = [];
+    /**
+     * @var Manifest[]
+     */
+    private static $objects = [];
+    /**
+     * @var Manifest[]
+     */
+    private static $newInstances = [];
 
     /**
-     * @param object|string $target
+     * @param object|string $class
      *
      * @return Manifest
      * @throws \InvalidArgumentException
      */
-    public static function control($target)
+    public static function getStatic($class)
     {
-        $id = self::getId($target);
-        if (empty(self::$map[$id])) {
-            self::$map[$id] = new Manifest();
+        $class = self::getClassName($class);
+        if (empty(self::$classes[$class])) {
+            self::$classes[$class] = new Manifest();
         }
 
-        return self::$map[$id];
+        return self::$classes[$class];
     }
 
     /**
-     * @param object|string $target
+     * @param object|string $class
+     *
+     * @return Manifest
+     * @throws \InvalidArgumentException
+     */
+    public static function getNewInstance($class)
+    {
+        $class = self::getClassName($class);
+        self::$newInstances[$class] = new Manifest();
+
+        return self::$newInstances[$class];
+    }
+
+    /**
+     * @param object $object
+     *
+     * @return Manifest
+     * @throws \InvalidArgumentException
+     */
+    public static function getObject($object)
+    {
+        $hash = self::getObjectHash($object);
+        if (empty(self::$objects[$hash])) {
+            $class = self::getClassName($object);
+            if (isset(self::$newInstances[$class])) {
+                self::$objects[$hash] = clone self::$newInstances[$class];
+            } else {
+                self::$objects[$hash] = new Manifest();
+            }
+        }
+
+        return self::$objects[$hash];
+    }
+
+    /**
+     * @param object|string $class
+     *
+     * @throws \InvalidArgumentException
+     */
+    public static function removeStatic($class)
+    {
+        unset(self::$classes[self::getClassName($class)]);
+    }
+
+    /**
+     * @param object|string $class
+     */
+    public static function removeNewInstance($class)
+    {
+        unset(self::$newInstances[self::getClassName($class)]);
+    }
+
+    /**
+     * @param object $object
+     *
+     * @throws \InvalidArgumentException
+     */
+    public static function removeObject($object)
+    {
+        unset(self::$objects[self::getObjectHash($object)]);
+    }
+
+    /**
+     * Test if static method is under control.
+     *
+     * @param object|string $class Class name
+     * @param string $method Method name
      *
      * @return bool
      */
-    public static function isUnderControl($target)
+    public static function hasStatic($class, $method)
     {
-        $id = self::getId($target);
+        $class = self::getClassName($class);
 
-        return isset(self::$map[$id]);
+        return (isset(self::$classes[$class]) and self::$classes[$class]->has($method));
     }
 
     /**
-     * @param object|string $target
+     * @param object $object
+     * @param string $method
+     *
+     * @return bool
+     * @throws \InvalidArgumentException
      */
-    public static function removeControl($target)
+    public static function hasObject($object, $method)
     {
-        $id = self::getId($target);
-        unset(self::$map[$id]);
+        $hash = self::getObjectHash($object);
+        if (empty(self::$objects[$hash])) {
+            $class = $class = self::getClassName($object);
+
+            return (isset(self::$newInstances[$class]) and self::$newInstances[$class]->has($method));
+        } else {
+            return self::$objects[$hash]->has($method);
+        }
     }
 
     /**
+     * Get correct class name.
+     *
      * @param object|string $target
+     *
+     * @return string Class name
+     * @throws \InvalidArgumentException
+     */
+    private static function getClassName($target)
+    {
+        if (is_object($target)) {
+            $class = ltrim(get_class($target), '\\');
+        } elseif (is_string($target) and class_exists($target)) {
+            $class = ltrim($target, '\\');
+        } else {
+            throw new \InvalidArgumentException('Target must be an object or string of class name.');
+        }
+
+        return $class;
+    }
+
+    /**
+     * Get hash of object.
+     *
+     * @param object $object
      *
      * @return string
      * @throws \InvalidArgumentException
      */
-    private static function getId($target)
+    private static function getObjectHash($object)
     {
-        if (is_object($target)) {
-            $id = spl_object_hash($target);
-        } elseif (is_string($target)) {
-            $id = $target;
+        if (is_object($object)) {
+            return spl_object_hash($object);
         } else {
-            throw new \InvalidArgumentException('Target must be an object or string class name.');
+            throw new \InvalidArgumentException('Target must be an object.');
         }
-
-        return $id;
     }
 }

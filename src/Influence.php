@@ -87,7 +87,7 @@ class Influence
         $loaders = spl_autoload_functions();
         foreach ($loaders as $loader) {
             list($object) = $loader;
-            if ($object instanceof ClassLoader) {
+            if (get_class($object) === 'Composer\\Autoload\\ClassLoader') {
                 return $object;
             }
         }

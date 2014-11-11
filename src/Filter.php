@@ -7,6 +7,7 @@
 
 namespace Influence;
 
+use Influence\Transformer\MetaInfo\ClassMetaInfo;
 use Influence\Transformer\Transformer;
 
 /**
@@ -64,9 +65,8 @@ class Filter extends \php_user_filter
     {
         if (self::$transformer === null) {
             self::$transformer = new Transformer();
-        } else {
-            self::$transformer->reset();
         }
+        self::$transformer->setClassMetaInfo(new ClassMetaInfo());
         $tokens = token_get_all($content);
         $content = '';
         foreach ($tokens as $token) {

@@ -18,78 +18,90 @@ use Influence\RemoteControl as RC;
 class RemoteControlTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Test checking object status.
+     * Class name.
      */
-    public function testIsUnderControl()
+    const SIMPLE_CLASS_NAME = 'Test\\Influence\\SimpleClass';
+
+    /**
+     * Test getting hash of object.
+     */
+    public function testGetObjectHash()
     {
-        $className = 'SomeClassName';
-        $object1 = new \stdClass();
-        $object2 = new \stdClass();
-
-        $this->assertFalse(RC::isUnderControl($className));
-        $this->assertFalse(RC::isUnderControl($object1));
-        $this->assertFalse(RC::isUnderControl($object2));
-
-        RC::control($className);
-        RC::control($object1);
-
-        $this->assertTrue(RC::isUnderControl($className));
-        $this->assertTrue(RC::isUnderControl($object1));
-        $this->assertFalse(RC::isUnderControl($object2));
+        $method = new \ReflectionMethod('Influence\\RemoteControl', 'getObjectHash');
+        $method->setAccessible(true);
+        $hash = $method->invoke(null, new SimpleClass());
+        $this->assertInternalType('string', $hash);
+        $this->assertNotEmpty($hash);
     }
 
     /**
-     * Test removing object from control.
+     * @return array
      */
-    public function testRemoveControl()
+    public function dpControlStaticInvalidArgument()
     {
-        $className = 'SomeClassName';
-        $object1 = new \stdClass();
-        $object2 = new \stdClass();
-
-        RC::control($className);
-        RC::control($object1);
-        RC::control($object2);
-
-        $this->assertTrue(RC::isUnderControl($className));
-        $this->assertTrue(RC::isUnderControl($object1));
-        $this->assertTrue(RC::isUnderControl($object2));
-
-        RC::removeControl($className);
-        RC::removeControl($object1);
-
-        $this->assertFalse(RC::isUnderControl($className));
-        $this->assertFalse(RC::isUnderControl($object1));
-        $this->assertTrue(RC::isUnderControl($object2));
+        return [
+            [5],
+            [[1 => true]],
+            [.2],
+            ['NotExistentClassName']
+        ];
     }
 
     /**
-     * Test getting right Manifest object.
-     */
-    public function testControl()
-    {
-        $className = 'SomeClassName';
-        $object1 = new \stdClass();
-        $object2 = new \stdClass();
-
-        $this->assertFalse(RC::control($className)->intercept('method'));
-        $this->assertFalse(RC::control($object1)->intercept('method'));
-        $this->assertFalse(RC::control($object2)->intercept('method'));
-
-        RC::control($className)->setReturn('method', 5);
-        RC::control($object2)->setReturn('method', 5);
-
-        $this->assertTrue(RC::control($className)->intercept('method'));
-        $this->assertFalse(RC::control($object1)->intercept('method'));
-        $this->assertTrue(RC::control($object2)->intercept('method'));
-    }
-
-    /**
+     * Test getting invalid class name.
+     *
+     * @param mixed $target
+     *
      * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Target must be an object or string class name.
+     * @expectedExceptionMessage Target must be an object.
+     *
+     * @dataProvider dpControlStaticInvalidArgument
      */
-    public function testInvalidTarget()
+    public function testGetObjectHashInvalid($target)
     {
-        RC::isUnderControl(5);
+        $method = new \ReflectionMethod('Influence\RemoteControl', 'getObjectHash');
+        $method->setAccessible(true);
+        $method->invoke(null, $target);
+    }
+
+    /**
+     * Test getting class name.
+     */
+    public function testGetClassName()
+    {
+        $method = new \ReflectionMethod('Influence\\RemoteControl', 'getClassName');
+        $method->setAccessible(true);
+        $this->assertSame(self::SIMPLE_CLASS_NAME, $method->invoke(null, self::SIMPLE_CLASS_NAME));
+        $this->assertSame(self::SIMPLE_CLASS_NAME, $method->invoke(null, '\\' . self::SIMPLE_CLASS_NAME));
+        $this->assertSame(self::SIMPLE_CLASS_NAME, $method->invoke(null, new SimpleClass()));
+    }
+
+    /**
+     * Test getting invalid class name.
+     *
+     * @param mixed $target
+     *
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Target must be an object or string of class name.
+     *
+     * @dataProvider dpControlStaticInvalidArgument
+     */
+    public function testGetClassNameInvalid($target)
+    {
+        $method = new \ReflectionMethod('Influence\RemoteControl', 'getClassName');
+        $method->setAccessible(true);
+        $method->invoke(null, $target);
+    }
+
+    /**
+     * Test default behavior of synthetic class.
+     */
+    public function testDefaultClassBehavior()
+    {
+        $class = new SimpleClass();
+        $this->assertSame(self::SIMPLE_CLASS_NAME . '::method', $class->method());
+        $this->assertSame(self::SIMPLE_CLASS_NAME . '::staticMethod', $class->staticMethod());
+        $this->assertFalse(RC::hasObject($class, 'method'));
+        $this->assertFalse(RC::hasStatic(self::SIMPLE_CLASS_NAME, 'staticMethod'));
     }
 }
