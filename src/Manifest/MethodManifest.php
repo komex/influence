@@ -33,6 +33,29 @@ class MethodManifest
     private $value;
 
     /**
+     * Recursive extract value.
+     *
+     * @param ReturnInterface $extractor
+     * @param array $arguments
+     * @param object|string $scope
+     *
+     * @return mixed
+     */
+    public static function extractValue(ReturnInterface $extractor, array $arguments, $scope)
+    {
+        if ($extractor instanceof ArgumentsInterface) {
+            $extractor->setArguments($arguments);
+        }
+        if ($extractor instanceof ScopeInterface) {
+            $extractor->setScope($scope);
+        }
+
+        $value = $extractor->getValue();
+
+        return ($value instanceof ReturnInterface) ? self::extractValue($value, $arguments, $scope) : $value;
+    }
+
+    /**
      * @param boolean $log
      */
     public function setLog($log)
@@ -85,14 +108,8 @@ class MethodManifest
         if ($this->value === null) {
             return null;
         }
-        if ($this->value instanceof ArgumentsInterface) {
-            $this->value->setArguments($arguments);
-        }
-        if ($this->value instanceof ScopeInterface) {
-            $this->value->setScope($scope);
-        }
 
-        return $this->value->getValue();
+        return self::extractValue($this->value, $arguments, $scope);
     }
 
     /**
