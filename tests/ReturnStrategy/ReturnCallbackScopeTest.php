@@ -5,7 +5,7 @@
  * (c) Andrey Kolchenko <andrey@kolchenko.me>
  */
 
-namespace ReturnStrategy;
+namespace Test\Influence\ReturnStrategy;
 
 use Influence\ReturnStrategy\CallbackScope;
 
