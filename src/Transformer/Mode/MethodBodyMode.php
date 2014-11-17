@@ -70,7 +70,7 @@ class MethodBodyMode extends AbstractMode
     private function getInjectedCode(MethodMetaInfo $metaInfo)
     {
         static $namespace = '\\Influence\\RemoteControl::';
-        if ($metaInfo->getIsStatic() or $metaInfo->isConstructor()) {
+        if ($metaInfo->getIsStatic() || $metaInfo->isConstructor()) {
             $hasMethod = $namespace . 'hasStatic(get_called_class(), __FUNCTION__)';
             $getMethod = $namespace . 'getStatic(get_called_class())';
         } else {
