@@ -51,7 +51,7 @@ class MethodMetaInfo extends AbstractMetaInfo
     /**
      * @return boolean
      */
-    public function getIsStatic()
+    public function isStatic()
     {
         return $this->isStatic;
     }
@@ -59,7 +59,7 @@ class MethodMetaInfo extends AbstractMetaInfo
     /**
      * @param boolean $isStatic
      */
-    public function setIsStatic($isStatic)
+    public function setStatic($isStatic)
     {
         $this->isStatic = (bool)$isStatic;
     }
