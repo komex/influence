@@ -68,7 +68,7 @@ class ClassBodyMode extends AbstractMode
                     break;
                 case T_FUNCTION:
                     $method = new MethodMetaInfo();
-                    $method->setIsStatic($this->static);
+                    $method->setStatic($this->static);
                     $method->setAttribute($this->attribute);
                     $method->setVisibility($this->visibility);
                     $this->getTransformer()->getClassMetaInfo()->addMethod($method);

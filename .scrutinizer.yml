@@ -159,3 +159,4 @@ checks:
         assignment_of_null_return: true
         argument_type_checks: true
         align_assignments: true
+        avoid_usage_of_logical_operators: true
