@@ -27,7 +27,7 @@ class Manifest implements \Countable
      */
     public function getMethod($method)
     {
-        if (empty($this->methods[$method])) {
+        if (empty($this->methods[$method]) === true) {
             $this->methods[$method] = new MethodManifest();
         }
 
