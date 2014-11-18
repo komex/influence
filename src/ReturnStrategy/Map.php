@@ -77,7 +77,7 @@ class Map implements ReturnInterface, ArgumentsInterface, ScopeInterface
     public function getValue()
     {
         foreach ($this->map as $map) {
-            if (!is_array($map) || $this->argumentsCount !== (count($map) - 1)) {
+            if (is_array($map) === false || $this->argumentsCount !== (count($map) - 1)) {
                 continue;
             }
             $value = array_pop($map);
