@@ -74,7 +74,7 @@ class Injector extends \php_user_filter
         $tokens = token_get_all($content);
         $content = '';
         foreach ($tokens as $token) {
-            if (is_array($token)) {
+            if (is_array($token) === true) {
                 list($code, $value) = $token;
             } else {
                 $code = null;
