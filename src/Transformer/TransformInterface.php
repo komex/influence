@@ -7,7 +7,6 @@
 
 namespace Influence\Transformer;
 
-
 /**
  * Interface TransformInterface
  *

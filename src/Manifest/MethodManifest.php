@@ -7,8 +7,8 @@
 
 namespace Influence\Manifest;
 
-use Influence\ReturnStrategy\ReturnInterface;
 use Influence\ReturnStrategy\ArgumentsInterface;
+use Influence\ReturnStrategy\ReturnInterface;
 use Influence\ReturnStrategy\ScopeInterface;
 
 /**

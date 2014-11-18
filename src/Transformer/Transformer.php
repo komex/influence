@@ -15,8 +15,8 @@ use Influence\Transformer\Mode\ClassMode;
 use Influence\Transformer\Mode\ExtendsMode;
 use Influence\Transformer\Mode\FileMode;
 use Influence\Transformer\Mode\ImplementsMode;
-use Influence\Transformer\Mode\MethodHeadMode;
 use Influence\Transformer\Mode\MethodBodyMode;
+use Influence\Transformer\Mode\MethodHeadMode;
 use Influence\Transformer\Mode\NamespaceMode;
 use Influence\Transformer\Mode\UseMode;
 

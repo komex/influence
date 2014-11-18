@@ -7,8 +7,8 @@
 
 namespace Influence\Transformer\Mode;
 
-use Influence\Transformer\Transformer;
 use Influence\Transformer\TransformInterface;
+use Influence\Transformer\Transformer;
 
 /**
  * Class AbstractMode
