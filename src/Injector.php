@@ -11,14 +11,14 @@ use Influence\Transformer\MetaInfo\ClassMetaInfo;
 use Influence\Transformer\Transformer;
 
 /**
- * Class Filter
+ * Class Injector
  *
  * @package Influence
  * @author Andrey Kolchenko <andrey@kolchenko.me>
  *
  * @property resource $stream
  */
-class Filter extends \php_user_filter
+class Injector extends \php_user_filter
 {
     /**
      * @var Transformer

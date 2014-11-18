@@ -75,7 +75,7 @@ class Influence
             spl_autoload_unregister($loader);
         }
         spl_autoload_register([$this, 'loadClass']);
-        stream_filter_register('influence.reader', 'Influence\\Filter');
+        stream_filter_register('influence.reader', 'Influence\\Injector');
     }
 
     /**

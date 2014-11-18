@@ -7,15 +7,15 @@
 
 namespace Test\Influence;
 
-use Influence\Filter;
+use Influence\Injector;
 
 /**
- * Class FilterTest
+ * Class InjectorTest
  *
  * @package Test\Influence
  * @author Andrey Kolchenko <andrey@kolchenko.me>
  */
-class FilterTest extends \PHPUnit_Framework_TestCase
+class InjectorTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @return array
@@ -43,7 +43,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
     public function testTransform($file)
     {
         $codeOriginal = file_get_contents($file);
-        $filter = new Filter();
+        $filter = new Injector();
         $class = new \ReflectionObject($filter);
         $method = $class->getMethod('transform');
         $method->setAccessible(true);
@@ -55,7 +55,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
         $this->assertGreaterThan(strlen($codeOriginal), strlen($codeTransformed));
 
         for ($i = 0; $i < count($linesOriginal); $i++) {
-            if (empty($linesOriginal[$i]) and empty($linesTransformed[$i])) {
+            if (empty($linesOriginal[$i]) && empty($linesTransformed[$i])) {
                 continue;
             }
             $this->assertStringStartsWith($linesOriginal[$i], $linesTransformed[$i]);
