@@ -40,7 +40,7 @@ class ClassMode extends AbstractMode
     {
         if ($code === T_STRING) {
             $this->getTransformer()->getClassMetaInfo()->setName($value);
-        } elseif (in_array($code, self::$modes)) {
+        } elseif (in_array($code, self::$modes) === true) {
             $this->getTransformer()->setMode($code);
         } elseif ($value === '{') {
             $this->getTransformer()->setMode(Transformer::MODE_CLASS_BODY);
