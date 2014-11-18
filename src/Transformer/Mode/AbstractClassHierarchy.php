@@ -34,10 +34,10 @@ abstract class AbstractClassHierarchy extends AbstractMode
      */
     public function transform($code, $value)
     {
-        if ($code === T_NS_SEPARATOR or $code === T_STRING) {
+        if ($code === T_NS_SEPARATOR || $code === T_STRING) {
             $this->class .= $value;
             $this->starts = true;
-        } elseif ($this->starts) {
+        } elseif ($this->starts === true) {
             $this->setter(ltrim($this->class, '\\'));
             $this->class = '';
             $this->starts = false;

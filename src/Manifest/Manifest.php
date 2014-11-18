@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is a part of RemoteControl project.
+ * This file is a part of RemoteControlUtils project.
  *
  * (c) Andrey Kolchenko <andrey@kolchenko.me>
  */
@@ -25,7 +25,7 @@ class Manifest implements \Countable
      *
      * @return MethodManifest
      */
-    public function get($method)
+    public function getMethod($method)
     {
         if (empty($this->methods[$method])) {
             $this->methods[$method] = new MethodManifest();
@@ -39,7 +39,7 @@ class Manifest implements \Countable
      *
      * @return bool
      */
-    public function has($method)
+    public function hasMethod($method)
     {
         return isset($this->methods[$method]);
     }
@@ -49,7 +49,7 @@ class Manifest implements \Countable
      *
      * @return $this
      */
-    public function remove($method)
+    public function removeMethod($method)
     {
         unset($this->methods[$method]);
 

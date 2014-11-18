@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is a part of RemoteControl project.
+ * This file is a part of RemoteControlUtils project.
  *
  * (c) Andrey Kolchenko <andrey@kolchenko.me>
  */
@@ -15,7 +15,7 @@ use Composer\Autoload\ClassLoader;
  * @package Influence
  * @author Andrey Kolchenko <andrey@kolchenko.me>
  */
-class Influence
+final class Influence
 {
     /**
      * @var Influence
@@ -36,33 +36,28 @@ class Influence
     }
 
     /**
-     * @return Influence
+     * Integrate Influence in code.
      */
     public static function affect()
     {
         if (self::$instance === null) {
             self::$instance = new self();
         }
-
-        return self::$instance;
     }
 
     /**
      * @param string $class
-     *
-     * @return bool
      */
     public function loadClass($class)
     {
         if (strpos(ltrim($class, '\\'), __NAMESPACE__) === 0) {
-            return $this->composer->loadClass($class);
-        } elseif ($file = $this->composer->findFile($class)) {
-            \Composer\Autoload\includeFile('php://filter/read=influence.reader/resource=' . $file);
-
-            return true;
+            $this->composer->loadClass($class);
+        } else {
+            $file = $this->composer->findFile($class);
+            if ($file !== false) {
+                \Composer\Autoload\includeFile('php://filter/read=influence.reader/resource=' . $file);
+            }
         }
-
-        return false;
     }
 
     /**
@@ -75,7 +70,7 @@ class Influence
             spl_autoload_unregister($loader);
         }
         spl_autoload_register([$this, 'loadClass']);
-        stream_filter_register('influence.reader', 'Influence\\Filter');
+        stream_filter_register('influence.reader', 'Influence\\Injector');
     }
 
     /**

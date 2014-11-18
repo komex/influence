@@ -34,7 +34,7 @@ class MethodHeadMode extends AbstractMode
     public function transform($code, $value)
     {
         $method = $this->getTransformer()->getClassMetaInfo()->currentMethod();
-        if ($code === T_STRING and $method->getName() === null) {
+        if ($code === T_STRING && $method->getName() === null) {
             $method->setName($value);
         } elseif ($value === ')') {
             $this->getTransformer()->setMode(Transformer::MODE_METHOD_BODY);

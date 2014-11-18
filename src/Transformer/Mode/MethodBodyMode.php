@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is a part of RemoteControl project.
+ * This file is a part of RemoteControlUtils project.
  *
  * (c) Andrey Kolchenko <andrey@kolchenko.me>
  */
@@ -69,7 +69,7 @@ class MethodBodyMode extends AbstractMode
      */
     private function getInjectedCode(MethodMetaInfo $metaInfo)
     {
-        static $namespace = '\\Influence\\RemoteControl::';
+        static $namespace = '\\Influence\\RemoteControlUtils::';
         if ($metaInfo->isStatic() || $metaInfo->isConstructor()) {
             $hasMethod = $namespace . 'hasStatic(get_called_class(), __FUNCTION__)';
             $getMethod = $namespace . 'getStatic(get_called_class())';
@@ -82,8 +82,8 @@ class MethodBodyMode extends AbstractMode
 
         $code = <<<EOL
 if (${hasMethod}) {
-    ${manifest} = ${getMethod}->get(__FUNCTION__);
-    if (${manifest}->log(func_get_args())->hasValue()) {
+    ${manifest} = ${getMethod}->getMethod(__FUNCTION__);
+    if (${manifest}->writeLog(func_get_args())->hasValue()) {
         return ${manifest}->getValue(func_get_args(), $scope);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is a part of RemoteControl project.
+ * This file is a part of RemoteControlUtils project.
  *
  * (c) Andrey Kolchenko <andrey@kolchenko.me>
  */
@@ -10,12 +10,12 @@ namespace Influence;
 use Influence\Manifest\Manifest;
 
 /**
- * Class RemoteControl
+ * Class RemoteControlUtils
  *
  * @package Influence
  * @author Andrey Kolchenko <andrey@kolchenko.me>
  */
-class RemoteControl
+class RemoteControlUtils
 {
     /**
      * @var Manifest[]
@@ -38,12 +38,12 @@ class RemoteControl
      */
     public static function getStatic($class)
     {
-        $class = self::getClassName($class);
-        if (empty(self::$classes[$class])) {
-            self::$classes[$class] = new Manifest();
+        $className = self::getClassName($class);
+        if (empty(self::$classes[$className])) {
+            self::$classes[$className] = new Manifest();
         }
 
-        return self::$classes[$class];
+        return self::$classes[$className];
     }
 
     /**
@@ -54,10 +54,10 @@ class RemoteControl
      */
     public static function getNewInstance($class)
     {
-        $class = self::getClassName($class);
-        self::$newInstances[$class] = new Manifest();
+        $className = self::getClassName($class);
+        self::$newInstances[$className] = new Manifest();
 
-        return self::$newInstances[$class];
+        return self::$newInstances[$className];
     }
 
     /**
@@ -119,9 +119,9 @@ class RemoteControl
      */
     public static function hasStatic($class, $method)
     {
-        $class = self::getClassName($class);
+        $className = self::getClassName($class);
 
-        return (isset(self::$classes[$class]) && self::$classes[$class]->has($method));
+        return (isset(self::$classes[$className]) && self::$classes[$className]->hasMethod($method));
     }
 
     /**
@@ -137,9 +137,9 @@ class RemoteControl
         if (empty(self::$objects[$hash])) {
             $class = $class = self::getClassName($object);
 
-            return (isset(self::$newInstances[$class]) && self::$newInstances[$class]->has($method));
+            return (isset(self::$newInstances[$class]) && self::$newInstances[$class]->hasMethod($method));
         } else {
-            return self::$objects[$hash]->has($method);
+            return self::$objects[$hash]->hasMethod($method);
         }
     }
 

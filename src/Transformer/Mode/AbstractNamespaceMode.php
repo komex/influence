@@ -30,7 +30,7 @@ abstract class AbstractNamespaceMode extends AbstractMode
      */
     public function transform($code, $value)
     {
-        if ($code === T_NS_SEPARATOR or $code === T_STRING) {
+        if ($code === T_NS_SEPARATOR || $code === T_STRING) {
             $this->class .= $value;
         } elseif ($value === ';') {
             $transformer = $this->getTransformer();

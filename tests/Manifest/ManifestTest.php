@@ -32,11 +32,11 @@ class ManifestTest extends \PHPUnit_Framework_TestCase
     {
         $manifest = new Manifest();
         for ($i = 0; $i < 3; $i++) {
-            $this->assertInstanceOf('Influence\\Manifest\\MethodManifest', $manifest->get('method1'));
+            $this->assertInstanceOf('Influence\\Manifest\\MethodManifest', $manifest->getMethod('method1'));
             $this->assertCount(1, $manifest);
         }
         for ($i = 0; $i < 3; $i++) {
-            $this->assertInstanceOf('Influence\\Manifest\\MethodManifest', $manifest->get('method2'));
+            $this->assertInstanceOf('Influence\\Manifest\\MethodManifest', $manifest->getMethod('method2'));
             $this->assertCount(2, $manifest);
         }
     }
@@ -47,11 +47,11 @@ class ManifestTest extends \PHPUnit_Framework_TestCase
     public function testHasMethod()
     {
         $manifest = new Manifest();
-        $this->assertFalse($manifest->has('method1'));
-        $this->assertFalse($manifest->has('method2'));
-        $manifest->get('method1');
-        $this->assertTrue($manifest->has('method1'));
-        $this->assertFalse($manifest->has('method2'));
+        $this->assertFalse($manifest->hasMethod('method1'));
+        $this->assertFalse($manifest->hasMethod('method2'));
+        $manifest->getMethod('method1');
+        $this->assertTrue($manifest->hasMethod('method1'));
+        $this->assertFalse($manifest->hasMethod('method2'));
     }
 
     /**
@@ -60,10 +60,10 @@ class ManifestTest extends \PHPUnit_Framework_TestCase
     public function testRemoveMethod()
     {
         $manifest = new Manifest();
-        $manifest->get('method1');
-        $manifest->get('method2');
-        $manifest->remove('method1');
-        $this->assertFalse($manifest->has('method1'));
-        $this->assertTrue($manifest->has('method2'));
+        $manifest->getMethod('method1');
+        $manifest->getMethod('method2');
+        $manifest->removeMethod('method1');
+        $this->assertFalse($manifest->hasMethod('method1'));
+        $this->assertTrue($manifest->hasMethod('method2'));
     }
 }
