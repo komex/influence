@@ -37,7 +37,7 @@ abstract class AbstractClassHierarchy extends AbstractMode
         if ($code === T_NS_SEPARATOR || $code === T_STRING) {
             $this->class .= $value;
             $this->starts = true;
-        } elseif ($this->starts) {
+        } elseif ($this->starts === true) {
             $this->setter(ltrim($this->class, '\\'));
             $this->class = '';
             $this->starts = false;
