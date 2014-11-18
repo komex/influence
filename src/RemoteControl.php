@@ -38,12 +38,12 @@ class RemoteControl
      */
     public static function getStatic($class)
     {
-        $class = self::getClassName($class);
-        if (empty(self::$classes[$class])) {
-            self::$classes[$class] = new Manifest();
+        $className = self::getClassName($class);
+        if (empty(self::$classes[$className])) {
+            self::$classes[$className] = new Manifest();
         }
 
-        return self::$classes[$class];
+        return self::$classes[$className];
     }
 
     /**
@@ -54,10 +54,10 @@ class RemoteControl
      */
     public static function getNewInstance($class)
     {
-        $class = self::getClassName($class);
-        self::$newInstances[$class] = new Manifest();
+        $className = self::getClassName($class);
+        self::$newInstances[$className] = new Manifest();
 
-        return self::$newInstances[$class];
+        return self::$newInstances[$className];
     }
 
     /**
@@ -119,9 +119,9 @@ class RemoteControl
      */
     public static function hasStatic($class, $method)
     {
-        $class = self::getClassName($class);
+        $className = self::getClassName($class);
 
-        return (isset(self::$classes[$class]) && self::$classes[$class]->hasMethod($method));
+        return (isset(self::$classes[$className]) && self::$classes[$className]->hasMethod($method));
     }
 
     /**
