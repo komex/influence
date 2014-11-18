@@ -62,7 +62,6 @@ class Transformer implements TransformInterface
      */
     public function __construct()
     {
-        /** @var AbstractMode[] $modes */
         $modes = [
             new FileMode(),
             new UseMode(),
@@ -76,7 +75,7 @@ class Transformer implements TransformInterface
             new AsIsMode(),
         ];
         foreach ($modes as $mode) {
-            $this->registerMode($mode->getCode(), $mode);
+            $this->registerMode($mode);
         }
     }
 
@@ -133,12 +132,11 @@ class Transformer implements TransformInterface
     }
 
     /**
-     * @param int $code
      * @param AbstractMode $mode
      */
-    private function registerMode($code, AbstractMode $mode)
+    private function registerMode(AbstractMode $mode)
     {
         $mode->setTransformer($this);
-        $this->modes[$code] = $mode;
+        $this->modes[$mode->getCode()] = $mode;
     }
 }
