@@ -50,11 +50,12 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $codeTransformed = $method->invoke($filter, $codeOriginal);
         $linesOriginal = explode(PHP_EOL, $codeOriginal);
         $linesTransformed = explode(PHP_EOL, $codeTransformed);
+        $count = count($linesOriginal);
 
-        $this->assertSame(count($linesOriginal), count($linesTransformed));
+        $this->assertSame($count, count($linesTransformed));
         $this->assertGreaterThan(strlen($codeOriginal), strlen($codeTransformed));
 
-        for ($i = 0; $i < count($linesOriginal); $i++) {
+        for ($i = 0; $i < $count; $i++) {
             if (empty($linesOriginal[$i]) && empty($linesTransformed[$i])) {
                 continue;
             }
