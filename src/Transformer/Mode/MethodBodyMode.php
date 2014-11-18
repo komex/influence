@@ -19,6 +19,11 @@ use Influence\Transformer\Transformer;
 class MethodBodyMode extends AbstractMode
 {
     /**
+     * Full class name of RemoteControlUtils.
+     */
+    const REMOTE_CONTROL_CLASS = '\\Influence\\RemoteControlUtils';
+
+    /**
      * @var int
      */
     private $level = 0;
@@ -39,27 +44,58 @@ class MethodBodyMode extends AbstractMode
      */
     public function transform($code, $value)
     {
-        switch ($value) {
-            case '{':
-                if ($this->level === 0) {
-                    $value .= $this->getInjectedCode($this->getTransformer()->getClassMetaInfo()->currentMethod());
-                }
-                $this->level++;
-                break;
-            case '}':
-                $this->level--;
-                if ($this->level === 0) {
-                    $this->getTransformer()->setMode(Transformer::MODE_CLASS_BODY);
-                }
-                break;
-            case ';':
-                if ($this->getTransformer()->getClassMetaInfo()->currentMethod()->getAttribute() === T_ABSTRACT) {
-                    $this->getTransformer()->setMode(Transformer::MODE_CLASS_BODY);
-                }
-                break;
+        if ($code === null) {
+            switch ($value) {
+                case '{':
+                    $value = $this->increaseLevel($value);
+                    break;
+                case '}':
+                    $this->decreaseLevel();
+                    break;
+                case ';':
+                    $this->skipAbstractMethod();
+                    break;
+            }
         }
 
         return $value;
+    }
+
+    /**
+     * @param string $value
+     *
+     * @return string
+     */
+    private function increaseLevel($value)
+    {
+        if ($this->level === 0) {
+            $value .= $this->getInjectedCode($this->getTransformer()->getClassMetaInfo()->currentMethod());
+        }
+        $this->level++;
+
+        return $value;
+    }
+
+
+    /**
+     * Decrease method nesting level.
+     */
+    private function decreaseLevel()
+    {
+        $this->level--;
+        if ($this->level === 0) {
+            $this->getTransformer()->setMode(Transformer::MODE_CLASS_BODY);
+        }
+    }
+
+    /**
+     * Skip abstract method.
+     */
+    private function skipAbstractMethod()
+    {
+        if ($this->getTransformer()->getClassMetaInfo()->currentMethod()->getAttribute() === T_ABSTRACT) {
+            $this->getTransformer()->setMode(Transformer::MODE_CLASS_BODY);
+        }
     }
 
     /**
@@ -69,22 +105,23 @@ class MethodBodyMode extends AbstractMode
      */
     private function getInjectedCode(MethodMetaInfo $metaInfo)
     {
-        static $namespace = '\\Influence\\RemoteControlUtils::';
         if ($metaInfo->isStatic() || $metaInfo->isConstructor()) {
-            $hasMethod = $namespace . 'hasStatic(get_called_class(), __FUNCTION__)';
-            $getMethod = $namespace . 'getStatic(get_called_class())';
+            $type = 'Static';
+            $class = 'get_called_class()';
         } else {
-            $hasMethod = $namespace . 'hasObject($this, __FUNCTION__)';
-            $getMethod = $namespace . 'getObject($this)';
+            $type = 'Object';
+            $class = '$this';
         }
+        $hasMethod = self::REMOTE_CONTROL_CLASS . sprintf('::has%s(%s, __FUNCTION__)', $type, $class);
+        $getMethod = self::REMOTE_CONTROL_CLASS . sprintf('::get%s(%s)', $type, $class);
         $scope = (($metaInfo->isStatic()) ? '__CLASS__' : '$this');
         $manifest = uniqid('$manifest_');
 
         $code = <<<EOL
-if (${hasMethod}) {
-    ${manifest} = ${getMethod}->getMethod(__FUNCTION__);
-    if (${manifest}->writeLog(func_get_args())->hasValue()) {
-        return ${manifest}->getValue(func_get_args(), $scope);
+if ({$hasMethod}) {
+    {$manifest} = {$getMethod}->getMethod(__FUNCTION__);
+    if ({$manifest}->writeLog(func_get_args())->hasValue()) {
+        return {$manifest}->getValue(func_get_args(), {$scope});
     }
 }
 EOL;
