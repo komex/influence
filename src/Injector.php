@@ -30,27 +30,31 @@ class Injector extends \php_user_filter
     private $data = '';
 
     /**
-     * @param resource $in
+     * @param resource $brigade
      * @param resource $out
      * @param int $consumed
      * @param bool $closing
      *
      * @return int
      */
-    public function filter($in, $out, &$consumed, $closing)
+    public function filter($brigade, $out, &$consumed, $closing)
     {
-        if ($closing) {
-            /** @var resource|\stdClass $bucket */
+        if ($closing === true) {
             $bucket = stream_bucket_new($this->stream, $this->transform($this->data));
             $this->data = '';
             $consumed += $bucket->datalen;
+            /** @var resource $bucket */
             stream_bucket_append($out, $bucket);
 
             return PSFS_PASS_ON;
         } else {
-            while ($bucket = stream_bucket_make_writeable($in)) {
+            do {
+                $bucket = stream_bucket_make_writeable($brigade);
+                if ($bucket === null) {
+                    break;
+                }
                 $this->data .= $bucket->data;
-            }
+            } while (true);
 
             return PSFS_FEED_ME;
         }
