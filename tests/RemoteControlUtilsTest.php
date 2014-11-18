@@ -10,12 +10,12 @@ namespace Test\Influence;
 use Influence\RemoteControlUtils as RC;
 
 /**
- * Class RemoteControlTest
+ * Class RemoteControlUtilsTest
  *
  * @package Test\Influence
  * @author Andrey Kolchenko <andrey@kolchenko.me>
  */
-class RemoteControlTest extends \PHPUnit_Framework_TestCase
+class RemoteControlUtilsTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Class name.
@@ -59,7 +59,7 @@ class RemoteControlTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetObjectHashInvalid($target)
     {
-        $method = new \ReflectionMethod('Influence\RemoteControl', 'getObjectHash');
+        $method = new \ReflectionMethod('Influence\\RemoteControlUtils', 'getObjectHash');
         $method->setAccessible(true);
         $method->invoke(null, $target);
     }
@@ -88,7 +88,7 @@ class RemoteControlTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetClassNameInvalid($target)
     {
-        $method = new \ReflectionMethod('Influence\RemoteControl', 'getClassName');
+        $method = new \ReflectionMethod('Influence\\RemoteControlUtils', 'getClassName');
         $method->setAccessible(true);
         $method->invoke(null, $target);
     }
