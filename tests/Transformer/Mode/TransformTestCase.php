@@ -27,7 +27,7 @@ abstract class TransformTestCase extends \PHPUnit_Framework_TestCase
     {
         $content = '';
         foreach (array_slice(token_get_all('<?php ' . $definition), 1) as $token) {
-            if (is_array($token)) {
+            if (is_array($token) === true) {
                 list($code, $value) = $token;
             } else {
                 $code = null;
