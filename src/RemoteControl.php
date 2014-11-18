@@ -121,7 +121,7 @@ class RemoteControl
     {
         $class = self::getClassName($class);
 
-        return (isset(self::$classes[$class]) && self::$classes[$class]->has($method));
+        return (isset(self::$classes[$class]) && self::$classes[$class]->hasMethod($method));
     }
 
     /**
@@ -137,9 +137,9 @@ class RemoteControl
         if (empty(self::$objects[$hash])) {
             $class = $class = self::getClassName($object);
 
-            return (isset(self::$newInstances[$class]) && self::$newInstances[$class]->has($method));
+            return (isset(self::$newInstances[$class]) && self::$newInstances[$class]->hasMethod($method));
         } else {
-            return self::$objects[$hash]->has($method);
+            return self::$objects[$hash]->hasMethod($method);
         }
     }
 

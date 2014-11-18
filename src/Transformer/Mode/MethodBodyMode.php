@@ -82,7 +82,7 @@ class MethodBodyMode extends AbstractMode
 
         $code = <<<EOL
 if (${hasMethod}) {
-    ${manifest} = ${getMethod}->get(__FUNCTION__);
+    ${manifest} = ${getMethod}->getMethod(__FUNCTION__);
     if (${manifest}->log(func_get_args())->hasValue()) {
         return ${manifest}->getValue(func_get_args(), $scope);
     }

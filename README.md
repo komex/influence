@@ -72,7 +72,7 @@ But with **Influence** you can simply test this code. Just specify the behavior 
 
 ```php
 $a = new A();
-$method = Influence\RemoteControl::controlObject($a)->get('rand');
+$method = Influence\RemoteControl::controlObject($a)->getMethod('rand');
 $method->setValue(new Value(1));
 echo $a->sum(1); // 2
 echo $a->sum(7); // 8
@@ -87,7 +87,7 @@ If you don't need to set custom method behavior, but want to know how many times
 
 ```php
 $a = new A();
-$method = Influence\RemoteControl::controlObject($a)->get('rand');
+$method = Influence\RemoteControl::controlObject($a)->getMethod('rand');
 $method->setLog(true);
 echo $a->sum(1); // ??
 echo $a->sum(7); // ??
