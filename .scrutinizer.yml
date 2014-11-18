@@ -73,7 +73,6 @@ checks:
         optional_parameters_at_the_end: true
         one_class_per_file: true
         non_commented_empty_catch_block: true
-        no_unnecessary_if: true
         no_unnecessary_function_call_in_for_loop: true
         no_unnecessary_final_modifier: true
         no_underscore_prefix_in_properties: true
