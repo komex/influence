@@ -105,7 +105,7 @@ class MethodBodyMode extends AbstractMode
      */
     private function getInjectedCode(MethodMetaInfo $metaInfo)
     {
-        if ($metaInfo->isStatic() || $metaInfo->isConstructor()) {
+        if ($metaInfo->isStatic() === true || $metaInfo->isConstructor() === true) {
             $type = 'Static';
             $class = 'get_called_class()';
         } else {
@@ -114,7 +114,7 @@ class MethodBodyMode extends AbstractMode
         }
         $hasMethod = self::REMOTE_CONTROL_CLASS . sprintf('::has%s(%s, __FUNCTION__)', $type, $class);
         $getMethod = self::REMOTE_CONTROL_CLASS . sprintf('::get%s(%s)', $type, $class);
-        $scope = (($metaInfo->isStatic()) ? '__CLASS__' : '$this');
+        $scope = (($metaInfo->isStatic() === true) ? '__CLASS__' : '$this');
         $manifest = uniqid('$manifest_');
 
         $code = <<<EOL

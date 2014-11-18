@@ -55,7 +55,7 @@ class ClassBodyMode extends AbstractMode
      */
     public function transform($code, $value)
     {
-        if (in_array($code, self::$visibilityFlags)) {
+        if (in_array($code, self::$visibilityFlags) === true) {
             $this->visibility = $code;
         } elseif ($code === T_STATIC) {
             $this->static = true;
@@ -69,7 +69,7 @@ class ClassBodyMode extends AbstractMode
             $this->getTransformer()->getClassMetaInfo()->addMethod($method);
             $this->getTransformer()->setMode($code);
             $this->reset();
-        } elseif (in_array($code, self::$attributeFlags)) {
+        } elseif (in_array($code, self::$attributeFlags) === true) {
             $this->attribute = $code;
         } elseif ($value === '}') {
             $this->getTransformer()->setMode(Transformer::MODE_FILE);

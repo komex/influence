@@ -39,7 +39,7 @@ class RemoteControlUtils
     public static function getStatic($class)
     {
         $className = self::getClassName($class);
-        if (empty(self::$classes[$className])) {
+        if (empty(self::$classes[$className]) === true) {
             self::$classes[$className] = new Manifest();
         }
 
@@ -69,9 +69,9 @@ class RemoteControlUtils
     public static function getObject($object)
     {
         $hash = self::getObjectHash($object);
-        if (empty(self::$objects[$hash])) {
+        if (empty(self::$objects[$hash]) === true) {
             $class = self::getClassName($object);
-            if (isset(self::$newInstances[$class])) {
+            if (isset(self::$newInstances[$class]) === true) {
                 self::$objects[$hash] = clone self::$newInstances[$class];
             } else {
                 self::$objects[$hash] = new Manifest();
@@ -134,7 +134,7 @@ class RemoteControlUtils
     public static function hasObject($object, $method)
     {
         $hash = self::getObjectHash($object);
-        if (empty(self::$objects[$hash])) {
+        if (empty(self::$objects[$hash]) === true) {
             $class = $class = self::getClassName($object);
 
             return (isset(self::$newInstances[$class]) && self::$newInstances[$class]->hasMethod($method));
@@ -153,9 +153,9 @@ class RemoteControlUtils
      */
     private static function getClassName($target)
     {
-        if (is_object($target)) {
+        if (is_object($target) === true) {
             $class = ltrim(get_class($target), '\\');
-        } elseif (is_string($target) && class_exists($target)) {
+        } elseif (is_string($target) === true && class_exists($target) === true) {
             $class = ltrim($target, '\\');
         } else {
             throw new \InvalidArgumentException('Target must be an object or string of class name.');
@@ -174,7 +174,7 @@ class RemoteControlUtils
      */
     private static function getObjectHash($object)
     {
-        if (is_object($object)) {
+        if (is_object($object) === true) {
             return spl_object_hash($object);
         } else {
             throw new \InvalidArgumentException('Target must be an object.');

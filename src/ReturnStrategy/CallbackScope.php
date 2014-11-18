@@ -20,9 +20,8 @@ class CallbackScope extends Callback implements ScopeInterface
      */
     public function setScope($scope)
     {
-        if (method_exists($this->handler, 'bindTo')) {
-            $this->handler = $this->handler->bindTo((is_object($scope) ? $scope : null), $scope);
-        }
+        $newThis = (is_object($scope) === true) ? $scope : null;
+        $this->handler = call_user_func([$this->handler, 'bindTo'], $newThis, $scope);
 
         return $this;
     }

@@ -46,11 +46,11 @@ class FileMode extends AbstractMode
      */
     public function transform($code, $value)
     {
-        if (in_array($code, self::$modes)) {
+        if (in_array($code, self::$modes) === true) {
             $this->getTransformer()->setMode($code);
-        } elseif (in_array($code, self::$attributes)) {
+        } elseif (in_array($code, self::$attributes) === true) {
             $this->getTransformer()->getClassMetaInfo()->setAttribute($code);
-        } elseif (in_array($code, self::$skip)) {
+        } elseif (in_array($code, self::$skip) === true) {
             $this->getTransformer()->setMode(Transformer::MODE_AS_IS);
         }
 

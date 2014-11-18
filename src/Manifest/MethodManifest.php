@@ -70,7 +70,7 @@ class MethodManifest
      */
     public function writeLog(array $arguments)
     {
-        if ($this->log) {
+        if ($this->log === true) {
             array_push($this->logs, $arguments);
         }
 
