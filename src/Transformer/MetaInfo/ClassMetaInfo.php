@@ -107,7 +107,7 @@ class ClassMetaInfo extends AbstractMetaInfo
      */
     public function addImplements($className)
     {
-        if (!in_array($className, $this->implements)) {
+        if (in_array($className, $this->implements) === false) {
             $this->implements[] = $className;
         }
 
@@ -145,7 +145,7 @@ class ClassMetaInfo extends AbstractMetaInfo
      */
     public function addUses($use)
     {
-        if (!in_array($use, $this->uses)) {
+        if (in_array($use, $this->uses) === false) {
             array_push($this->uses, $use);
         }
 
