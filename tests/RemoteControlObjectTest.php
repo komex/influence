@@ -7,7 +7,7 @@
 
 namespace Test\Influence;
 
-use Influence\RemoteControl as RC;
+use Influence\RemoteControlUtils as RC;
 use Influence\ReturnStrategy\Value;
 
 /**

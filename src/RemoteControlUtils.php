@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is a part of RemoteControl project.
+ * This file is a part of RemoteControlUtils project.
  *
  * (c) Andrey Kolchenko <andrey@kolchenko.me>
  */
@@ -10,12 +10,12 @@ namespace Influence;
 use Influence\Manifest\Manifest;
 
 /**
- * Class RemoteControl
+ * Class RemoteControlUtils
  *
  * @package Influence
  * @author Andrey Kolchenko <andrey@kolchenko.me>
  */
-class RemoteControl
+class RemoteControlUtils
 {
     /**
      * @var Manifest[]

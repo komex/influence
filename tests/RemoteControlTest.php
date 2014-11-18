@@ -7,7 +7,7 @@
 
 namespace Test\Influence;
 
-use Influence\RemoteControl as RC;
+use Influence\RemoteControlUtils as RC;
 
 /**
  * Class RemoteControlTest
@@ -27,7 +27,7 @@ class RemoteControlTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetObjectHash()
     {
-        $method = new \ReflectionMethod('Influence\\RemoteControl', 'getObjectHash');
+        $method = new \ReflectionMethod('Influence\\RemoteControlUtils', 'getObjectHash');
         $method->setAccessible(true);
         $hash = $method->invoke(null, new SimpleClass());
         $this->assertInternalType('string', $hash);
@@ -69,7 +69,7 @@ class RemoteControlTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetClassName()
     {
-        $method = new \ReflectionMethod('Influence\\RemoteControl', 'getClassName');
+        $method = new \ReflectionMethod('Influence\\RemoteControlUtils', 'getClassName');
         $method->setAccessible(true);
         $this->assertSame(self::SIMPLE_CLASS_NAME, $method->invoke(null, self::SIMPLE_CLASS_NAME));
         $this->assertSame(self::SIMPLE_CLASS_NAME, $method->invoke(null, '\\' . self::SIMPLE_CLASS_NAME));
