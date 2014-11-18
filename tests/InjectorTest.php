@@ -38,6 +38,8 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     /**
      * Test correct code transformation.
      *
+     * @param string $file
+     *
      * @dataProvider dpTransform
      */
     public function testTransform($file)
@@ -56,7 +58,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $this->assertGreaterThan(strlen($codeOriginal), strlen($codeTransformed));
 
         for ($i = 0; $i < $count; $i++) {
-            if (empty($linesOriginal[$i]) && empty($linesTransformed[$i])) {
+            if (empty($linesOriginal[$i]) === true && empty($linesTransformed[$i]) === true) {
                 continue;
             }
             $this->assertStringStartsWith($linesOriginal[$i], $linesTransformed[$i]);
