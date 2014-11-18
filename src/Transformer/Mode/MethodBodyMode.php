@@ -76,7 +76,6 @@ class MethodBodyMode extends AbstractMode
         return $value;
     }
 
-
     /**
      * Decrease method nesting level.
      */
