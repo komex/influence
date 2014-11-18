@@ -19,6 +19,11 @@ use Influence\Transformer\Transformer;
 class MethodBodyMode extends AbstractMode
 {
     /**
+     * Full class name of RemoteControlUtils.
+     */
+    const REMOTE_CONTROL_CLASS = '\\Influence\\RemoteControlUtils';
+
+    /**
      * @var int
      */
     private $level = 0;
@@ -100,14 +105,15 @@ class MethodBodyMode extends AbstractMode
      */
     private function getInjectedCode(MethodMetaInfo $metaInfo)
     {
-        static $namespace = '\\Influence\\RemoteControlUtils::';
         if ($metaInfo->isStatic() || $metaInfo->isConstructor()) {
-            $hasMethod = $namespace . 'hasStatic(get_called_class(), __FUNCTION__)';
-            $getMethod = $namespace . 'getStatic(get_called_class())';
+            $type = 'Static';
+            $class = 'get_called_class()';
         } else {
-            $hasMethod = $namespace . 'hasObject($this, __FUNCTION__)';
-            $getMethod = $namespace . 'getObject($this)';
+            $type = 'Object';
+            $class = '$this';
         }
+        $hasMethod = self::REMOTE_CONTROL_CLASS . sprintf('::has%s(%s, __FUNCTION__)', $type, $class);
+        $getMethod = self::REMOTE_CONTROL_CLASS . sprintf('::get%s(%s)', $type, $class);
         $scope = (($metaInfo->isStatic()) ? '__CLASS__' : '$this');
         $manifest = uniqid('$manifest_');
 
