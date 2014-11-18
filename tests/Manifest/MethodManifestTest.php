@@ -27,7 +27,7 @@ class MethodManifestTest extends \PHPUnit_Framework_TestCase
     public function testLogDefault()
     {
         $manifest = new MethodManifest();
-        $manifest->log([1]);
+        $manifest->writeLog([1]);
         $logs = $manifest->getLogs();
         $this->assertInternalType('array', $logs);
         $this->assertEmpty($logs);
@@ -40,8 +40,8 @@ class MethodManifestTest extends \PHPUnit_Framework_TestCase
     {
         $manifest = new MethodManifest();
         $manifest->setLog(true);
-        $manifest->log([1]);
-        $manifest->log(['a']);
+        $manifest->writeLog([1]);
+        $manifest->writeLog(['a']);
         $this->assertSame([[1], ['a']], $manifest->getLogs());
     }
 
@@ -52,9 +52,9 @@ class MethodManifestTest extends \PHPUnit_Framework_TestCase
     {
         $manifest = new MethodManifest();
         $manifest->setLog(true);
-        $manifest->log([1]);
+        $manifest->writeLog([1]);
         $manifest->setLog(false);
-        $manifest->log(['a']);
+        $manifest->writeLog(['a']);
         $this->assertSame([[1]], $manifest->getLogs());
     }
 
@@ -65,8 +65,8 @@ class MethodManifestTest extends \PHPUnit_Framework_TestCase
     {
         $manifest = new MethodManifest();
         $manifest->setLog(true);
-        $manifest->log([1]);
-        $manifest->log(['a']);
+        $manifest->writeLog([1]);
+        $manifest->writeLog(['a']);
         $manifest->clearLogs();
         $logs = $manifest->getLogs();
         $this->assertInternalType('array', $logs);

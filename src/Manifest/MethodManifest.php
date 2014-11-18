@@ -68,7 +68,7 @@ class MethodManifest
      *
      * @return $this
      */
-    public function log(array $arguments)
+    public function writeLog(array $arguments)
     {
         if ($this->log) {
             array_push($this->logs, $arguments);
@@ -113,7 +113,7 @@ class MethodManifest
     }
 
     /**
-     * @param ReturnInterface $value
+     * @param ReturnInterface|null $value
      */
     public function setValue(ReturnInterface $value = null)
     {
