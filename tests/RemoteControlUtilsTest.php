@@ -101,7 +101,7 @@ class RemoteControlUtilsTest extends \PHPUnit_Framework_TestCase
         $class = new SimpleClass();
         $this->assertSame(self::SIMPLE_CLASS_NAME . '::method', $class->method());
         $this->assertSame(self::SIMPLE_CLASS_NAME . '::staticMethod', $class->staticMethod());
-        $this->assertFalse(RC::hasObject($class, 'method'));
-        $this->assertFalse(RC::hasStatic(self::SIMPLE_CLASS_NAME, 'staticMethod'));
+        $this->assertFalse(RC::hasObject($class));
+        $this->assertFalse(RC::hasStatic(self::SIMPLE_CLASS_NAME));
     }
 }

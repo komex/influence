@@ -55,7 +55,9 @@ class RemoteControlUtils
     public static function getNewInstance($class)
     {
         $className = self::getClassName($class);
-        self::$newInstances[$className] = new Manifest();
+        if (empty(self::$newInstances[$className]) === true) {
+            self::$newInstances[$className] = new Manifest();
+        }
 
         return self::$newInstances[$className];
     }
@@ -70,9 +72,8 @@ class RemoteControlUtils
     {
         $hash = self::getObjectHash($object);
         if (empty(self::$objects[$hash]) === true) {
-            $class = self::getClassName($object);
-            if (isset(self::$newInstances[$class]) === true) {
-                self::$objects[$hash] = clone self::$newInstances[$class];
+            if (self::hasNewInstance($object) === true) {
+                self::$objects[$hash] = clone self::getNewInstance($object);
             } else {
                 self::$objects[$hash] = new Manifest();
             }
@@ -113,33 +114,35 @@ class RemoteControlUtils
      * Test if static method is under control.
      *
      * @param object|string $class Class name
-     * @param string $method Method name
      *
      * @return bool
      */
-    public static function hasStatic($class, $method)
+    public static function hasStatic($class)
     {
-        $className = self::getClassName($class);
+        return isset(self::$classes[self::getClassName($class)]);
+    }
 
-        return (isset(self::$classes[$className]) && self::$classes[$className]->hasMethod($method));
+    /**
+     * @param object|string $class
+     *
+     * @return bool
+     */
+    public static function hasNewInstance($class)
+    {
+        return isset(self::$newInstances[self::getClassName($class)]);
     }
 
     /**
      * @param object $object
-     * @param string $method
      *
      * @return bool
-     * @throws \InvalidArgumentException
      */
-    public static function hasObject($object, $method)
+    public static function hasObject($object)
     {
-        $hash = self::getObjectHash($object);
-        if (empty(self::$objects[$hash]) === true) {
-            $class = $class = self::getClassName($object);
-
-            return (isset(self::$newInstances[$class]) && self::$newInstances[$class]->hasMethod($method));
+        if (empty(self::$objects[self::getObjectHash($object)]) === true) {
+            return self::hasNewInstance($object);
         } else {
-            return self::$objects[$hash]->hasMethod($method);
+            return true;
         }
     }
 
