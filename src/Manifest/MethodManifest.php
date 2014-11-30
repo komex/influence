@@ -57,10 +57,14 @@ class MethodManifest
 
     /**
      * @param boolean $log
+     *
+     * @return $this
      */
     public function setLog($log)
     {
         $this->log = (bool)$log;
+
+        return $this;
     }
 
     /**
@@ -114,10 +118,14 @@ class MethodManifest
 
     /**
      * @param ReturnInterface|null $value
+     *
+     * @return $this
      */
     public function setValue(ReturnInterface $value = null)
     {
         $this->value = $value;
+
+        return $this;
     }
 
     /**

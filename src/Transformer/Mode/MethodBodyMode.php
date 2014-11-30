@@ -111,16 +111,19 @@ class MethodBodyMode extends AbstractMode
             $type = 'Object';
             $class = '$this';
         }
-        $hasMethod = self::REMOTE_CONTROL_CLASS . sprintf('::has%s(%s, __FUNCTION__)', $type, $class);
-        $getMethod = self::REMOTE_CONTROL_CLASS . sprintf('::get%s(%s)', $type, $class);
+        $control = self::REMOTE_CONTROL_CLASS . '::has' . $type . '(' . $class . ')';
+        $getManifest = self::REMOTE_CONTROL_CLASS . '::get' . $type . '(' . $class . ')';
         $scope = (($metaInfo->isStatic() === true) ? '__CLASS__' : '$this');
         $manifest = uniqid('$manifest_');
 
         $code = <<<EOL
-if ({$hasMethod}) {
-    {$manifest} = {$getMethod}->getMethod(__FUNCTION__);
-    if ({$manifest}->writeLog(func_get_args())->hasValue()) {
-        return {$manifest}->getValue(func_get_args(), {$scope});
+if ({$control}) {
+    {$manifest} = {$getManifest};
+    if ({$manifest}->hasMethod(__FUNCTION__)) {
+        {$manifest} = {$manifest}->getMethod(__FUNCTION__);
+        if ({$manifest}->writeLog(func_get_args())->hasValue()) {
+            return {$manifest}->getValue(func_get_args(), {$scope});
+        }
     }
 }
 EOL;
