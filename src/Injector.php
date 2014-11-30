@@ -71,7 +71,7 @@ class Injector extends \php_user_filter
             self::$transformer = new Transformer();
         }
         self::$transformer->setClassMetaInfo(new ClassMetaInfo());
-        $tokens = token_get_all($content);
+        $tokens = new \ArrayIterator(token_get_all($content));
         $content = '';
         foreach ($tokens as $token) {
             if (is_array($token) === true) {
