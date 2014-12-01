@@ -3,18 +3,19 @@
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/komex/influence/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/komex/influence/?branch=master)
 [![Latest Stable Version](https://poser.pugx.org/komex/influence/v/stable.svg)](https://packagist.org/packages/komex/influence)
 [![License](https://poser.pugx.org/komex/influence/license.svg)](https://packagist.org/packages/komex/influence)
-[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/komex/influence)
 
-# Influence
+About project
+========
 
-**Influence** is the PHP library gives you ability to mock any objects and static classes. Works only if you use [Composer autoloader](htttp://getcomposer.org/). This library very useful for testing your code.
+**Influence** is a testing instrument for programmers and quality engineers that helps them to test PHP projects
+by giving ability to mock and stub any objects, classes and new instances in realtime.
 
 ## Requirements
 
 * PHP 5.4 or higher
 * SPL extension
 * Tokenizer extension
-* Composer loader
+* It works only with projects which uses [Composer](http://getcomposer.org/).
 
 ## Installation
 
@@ -31,70 +32,23 @@ Here is a minimal example of a `composer.json` file that just defines a develop 
 
 ## Usage
 
-**Influence** must be injected as early as possible. If you are using unit test framework like [unteist](https://github.com/komex/unteist) or [PHPUnit](https://phpunit.de/) the best way to do this is include autoload and influence in bootstrap file.
+Just add one line of code before all tests to get ability to do anything with all not build-in objects and static classes:
 
 ```php
-require 'vendor/autoload.php';
 Influence\Influence::affect();
 ```
 
-Since this moment you are able to mock any objects and static classes. By default, all objects behave as usual. You need to configure behavior of each object or class you need to control.
+**Influence** must be injected as early as possible. You may control objects, classes and new instances loaded only after call ```affect()``` method. If you are using unit test framework like [unteist](https://github.com/komex/unteist) or [PHPUnit](https://phpunit.de/) the best way to do this is include influence in bootstrap file.
 
-### Manage objects
+Since this moment you are able to mock any objects and static classes. By default, all objects behave as usual. You need to configure behavior of each object or class you need to control with ```Influence\RemoteControlUtils```.
 
-Let imagine we have a simple class A:
+## Authors
 
-```php
-class A
-{
-    public function sum($a)
-    {
-        return $a + $this->rand(0, $a);
-    }
-    private fuction rand($min, $max)
-    {
-        return rand($min, $max);
-    }
-}
-```
+This project was founded by [Andrey Kolchenko](https://github.com/komex) in August of 2013.
 
-#### Custom method behavior.
+## Support or Contact
 
-So, if we create an object of class ```A``` we can invoke only ```sum()``` method and control only ```$a``` and never know result of our operation.
-
-```php
-$a = new A();
-echo $a->sum(1); // ??
-echo $a->sum(7); // ??
-````
-
-But with **Influence** you can simply test this code. Just specify the behavior of ```sum()``` like this:
-
-```php
-use Influence\RemoteControlUtils as RC;
-$a = new A();
-$method = RC::controlObject($a)->getMethod('rand');
-$method->setValue(new Value(1));
-echo $a->sum(1); // 2
-echo $a->sum(7); // 8
-$method->setValue();
-echo $a->sum(1); // ??
-echo $a->sum(7); // ??
-```
-
-#### Log method calls
-
-If you don't need to set custom method behavior, but want to know how many times method was called and with what arguments.
-
-```php
-use Influence\RemoteControlUtils as RC;
-$a = new A();
-$method = RC::controlObject($a)->getMethod('rand');
-$method->setLog(true);
-echo $a->sum(1); // ??
-echo $a->sum(7); // ??
-var_dump($method->getLogs()); // [ [0, 1], [0, 7] ]
-```
+Having trouble with Delusion? Contact andrey@kolchenko.me and we’ll help you in the short time.
 
 ## License
 
