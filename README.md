@@ -44,7 +44,7 @@ Since this moment you are able to mock any objects and static classes. By defaul
 
 ## Authors
 
-This project was founded by [Andrey Kolchenko](https://github.com/komex) in August of 2013.
+This project was founded by [Andrey Kolchenko](https://github.com/komex) in October of 2014.
 
 ## Support or Contact
 
