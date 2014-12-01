@@ -48,7 +48,7 @@ This project was founded by [Andrey Kolchenko](https://github.com/komex) in Octo
 
 ## Support or Contact
 
-Having trouble with Delusion? Contact andrey@kolchenko.me and we’ll help you in the short time.
+Having trouble with Influence? Contact andrey@kolchenko.me and we’ll help you in the short time.
 
 ## License
 
