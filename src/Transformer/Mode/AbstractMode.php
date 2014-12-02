@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is a part of RemoteControlUtils project.
+ * This file is a part of influence project.
  *
  * (c) Andrey Kolchenko <andrey@kolchenko.me>
  */
