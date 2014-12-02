@@ -83,10 +83,10 @@ class Map implements ReturnInterface, ArgumentsInterface, ScopeInterface
             $value = array_pop($map);
             if ($this->arguments === $map) {
                 if ($value instanceof ReturnInterface) {
-                    return MethodManifest::extractValue($value, $this->arguments, $this->scope);
-                } else {
-                    return $value;
+                    $value = MethodManifest::extractValue($value, $this->arguments, $this->scope);
                 }
+
+                return $value;
             }
         }
 
