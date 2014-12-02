@@ -147,6 +147,38 @@ class RemoteControlUtils
     }
 
     /**
+     * @return int
+     */
+    public static function countStatic()
+    {
+        return count(self::$classes);
+    }
+
+    /**
+     * @return int
+     */
+    public static function countObjects()
+    {
+        return count(self::$objects);
+    }
+
+    /**
+     * @return int
+     */
+    public static function countNewInstances()
+    {
+        return count(self::$newInstances);
+    }
+
+    /**
+     * @return int
+     */
+    public static function count()
+    {
+        return self::countStatic() + self::countObjects() + self::countNewInstances();
+    }
+
+    /**
      * Get correct class name.
      *
      * @param object|string $target

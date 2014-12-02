@@ -112,5 +112,6 @@ class RemoteControlStaticTest extends \PHPUnit_Framework_TestCase
     {
         RC::removeStatic(self::SIMPLE_CLASS_NAME);
         RC::removeNewInstance(self::SIMPLE_CLASS_NAME);
+        $this->assertSame(0, RC::count());
     }
 }

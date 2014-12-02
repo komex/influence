@@ -5,4 +5,4 @@
  * (c) Andrey Kolchenko <andrey@kolchenko.me>
  */
 
-\Influence\Influence::affect();
+\Influence\Influence::affect(['PHPUnit']);

@@ -104,6 +104,8 @@ class RemoteControlObjectTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(__FUNCTION__, $class1->method());
         RC::removeNewInstance(self::SIMPLE_CLASS_NAME);
         $this->assertSame(self::SIMPLE_CLASS_NAME . '::method', $class2->method());
+        RC::removeObject($class1);
+        $this->assertSame(self::SIMPLE_CLASS_NAME . '::method', $class1->method());
     }
 
     /**
@@ -113,5 +115,6 @@ class RemoteControlObjectTest extends \PHPUnit_Framework_TestCase
     {
         RC::removeStatic(self::SIMPLE_CLASS_NAME);
         RC::removeNewInstance(self::SIMPLE_CLASS_NAME);
+        $this->assertSame(0, RC::count());
     }
 }
