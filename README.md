@@ -6,6 +6,7 @@
 [![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/komex/influence)
 
 # Influence
+[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/komex/influence?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 **Influence** is the PHP library gives you ability to mock any objects and static classes. Works only if you use [Composer autoloader](htttp://getcomposer.org/). This library very useful for testing your code.
 
